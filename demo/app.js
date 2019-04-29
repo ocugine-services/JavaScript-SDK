@@ -13,20 +13,20 @@
 //======================================================
 $(document).ready(function(){
 	// Initialize Ocugine SDK
-	var OSDK = new OcugineSDK({ // App Settings
+	let OSDK = new OcugineSDK({ // App Settings
 		app_id: 1,
-		app_key: "asd9hj@Qniasdh87nasdb78ADF78as"
+		app_key: "c46361ae80c1679d637c2f23968a4dc5d5ea2a65"
 	}, { // SDK Settings
 		language: "EN"
 	}, true);
-	
-	// Call Test
-	OSDK.call("state.get_state", {}, function(data){ 
-		console.log(data); 
+
+	// Test Application Connection
+	OSDK.module("utils").testAPPConnection(function(data){
+		console.log("Ocugine SDK is Initialized"); // SDK Initialized
 	}, function(error){
 		console.log(error);
 	});
+
+	// Test localization
 	
-	// Test Module
-	OSDK.module("utils").test();
 });
