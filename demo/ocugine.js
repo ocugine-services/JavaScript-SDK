@@ -76,8 +76,11 @@ class OcugineSDK{
 	//					(function) success - Done Callback
 	//					(function) error - Error Callback
 	//	@returns		none
+	//  #CALLISHERE
 	//======================================================
 	call(method, data, success, error){
+		//if(method == 'oauth.logout') { debugger; }
+
 		// Check Method
 		var _self = this;
 		if(this._isEmpty(method) || !this._isString(method)) throw "API Method argument must contain string object and method name. For example: users.get_list";
@@ -105,16 +108,15 @@ class OcugineSDK{
 				try{ // Trying to parse data
 					var _resp = JSON.parse(xhr.responseText); // Parse JSON
 					if(_resp.complete){ // Complete Status
-						_success(_resp); // Send Success Callback
+						_success(_resp); // Send Success Callback 
 					}else{ // Error Status
-						_error({ // Call Error
+						_error({ // Call Error 
 							message: _resp.message,
 							code: (_self._isEmpty(_resp.code) || !_self._isNumber(_resp.code))?-1:_resp.code
 						});
 					}
 				}catch{ // Error
-					console.log(xhr.responseText);
-					_error({ // Call Error
+					_error({ // Call Error _
 						message: "Failed to decode server response. Please, try again later or contact us.",
 						code: 98
 					});
@@ -327,7 +329,28 @@ class Ocugine_Auth extends OcugineSDK{
 	//	@returns		none
 	//======================================================
 	get_link(grants, success, error){
+		// Set Callbacks
+		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+		var _self = this; // Link
 
+		// Call API Request
+		this.call("oauth.get_link", {
+			app_id: this.instance.application.app_id,
+			app_key: this.instance.application.app_key,
+		}, function(data){
+			_success(data)
+			let wind;
+			wind = window.open(data.data.auth_url);
+			var timer = setInterval(function() { 
+				if(wind.closed) { 
+					clearInterval(timer); 
+					_self.get_token(); 
+				} 
+			}, 1000);
+		}, function(error){
+			_error(error);
+		});
 	}
 
 	//======================================================
@@ -338,7 +361,19 @@ class Ocugine_Auth extends OcugineSDK{
 	//	@returns		none
 	//======================================================
 	get_token(success, error){
-
+		// Set Callbacks
+		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+		
+		this.call("oauth.get_token", {
+			app_id: this.instance.application.app_id,
+			app_key: this.instance.application.app_key,
+		}, function(data){
+			localStorage.access_token = data.data.access_token;
+			_success(data);		
+		}, function(error){
+			_error(error);
+		});
 	}
 
 	//======================================================
@@ -350,12 +385,38 @@ class Ocugine_Auth extends OcugineSDK{
 	//	@returns		none
 	//======================================================
 	remove_token(token, success, error){
+		var _self = this;
+		
+		// Set Callbacks
+		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+		var actoken = localStorage.getItem('access_token');
 
+		if(!actoken === true) {
+			_self.get_token(function(data) {				
+				_self.call("oauth.logout", {
+					access_token: localStorage.access_token
+				},
+				function() {
+					localStorage.removeItem('access_token');
+					_success(data);
+				},
+				function(error) {
+					_error(error);
+				});
+			});
+		} else {
+			this.call("oauth.logout", {
+				access_token: localStorage.access_token,
+			}, function(data){
+				localStorage.removeItem('access_token');
+				_success(data);				
+			}, function(error){
+			  _error(error);
+			});
+		}
 	}
-
-
 }
-
 //======================================================
 //	Ocugine Analytics
 //======================================================
@@ -479,7 +540,50 @@ class Ocugine_Backend extends OcugineSDK{
 		this.instance = parent; // Set Parent Object
 	}
 
-	/* TODO: Migrate from Previous Version of SDK */
+	//======================================================
+	//	@method			get_content_list()
+	//	@usage			Get content Info
+	//	@args				(obj) grants - grants
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//======================================================
+	get_content_list(success, error){
+		// Set Callbacks
+		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+		
+		this.call("cloud.get_content_list", {
+			app_id: this.instance.application.app_id,
+			app_key: this.instance.application.app_key,
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			get_content()
+	//	@usage			Get content
+	//	@args				(obj) grants - grants
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//======================================================
+	get_content(success, error){
+		// Set Callbacks
+		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+		
+		this.call("cloud.get_content", {
+			app_id: this.instance.application.app_id,
+			app_key: this.instance.application.app_key,
+			cid: this.instance.applicatiыon.cid
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
 }
 
 //======================================================
@@ -612,7 +716,53 @@ class Ocugine_Users extends OcugineSDK{
 		this.instance = parent; // Set Parent Object
 	}
 
-	/* TODO: Migrate from Previous Version of SDK */
+	//======================================================
+	//	@method			get_policy_list()
+	//	@usage			Get policy list
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//======================================================
+	get_policy_list(success, error){
+		// Set Callbacks
+		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+		
+		// Call API Request
+		this.call("users.get_policy_list", {
+			app_id: this.instance.application.app_id,
+			app_key: this.instance.application.app_key,
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+		
+	}
+
+	//======================================================
+	//	@method			get_policy_info()
+	//	@usage			Get policy info
+	//	@args				(string/array) grants - OAuth grants
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//======================================================
+	get_policy_info(success, error){
+		// Set Callbacks
+		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		this.call("users.get_policy_info", {
+			app_id: this.instance.application.app_id,
+			app_key: this.instance.application.app_key,
+			pid: this.instance.application.pid,
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+		
+	}
 }
 
 //======================================================
@@ -701,8 +851,8 @@ class Ocugine_Utils extends OcugineSDK{
 	//======================================================
 	//	@method			testAPPConnection()
 	//	@usage			Test Application Connection
-	//	@args				(function) success - Done Callback
-	//							(function) error - Error Callback
+	//	@args			(function) success - Done Callback
+	//					(function) error - Error Callback
 	//======================================================
 	testAPPConnection(success, error){
 		// Set Callbacks
@@ -720,6 +870,30 @@ class Ocugine_Utils extends OcugineSDK{
 			_error(error);
 		});
 	}
+
+	//======================================================
+	//	@method			get_settings()
+	//	@usage			Get settings for app
+	//	@args				(function) success - Done Callback
+	//							(function) error - Error Callback
+	//======================================================
+	get_settings(success, error){
+		var _self = this;
+		// Set Callbacks
+		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+		
+		// Call API Request
+		this.call("api_settings.get_settings", {
+			app_id: this.instance.application.app_id,
+			app_key: this.instance.application.app_key,
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
 
 	//======================================================
 	//	@method			test()
