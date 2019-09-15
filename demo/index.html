@@ -12,33 +12,65 @@
 		<meta name="generator" content="Ocugine Services" />
 		<meta name="robots" content="INDEX,FOLLOW" />
         <!-- META -->
-		
+
 		<!-- STYLES -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="app.css">
 		<!-- STYLES -->
 	</head>
 	<body>
 		<!-- HELLO WORLD -->
 		<div class="container">
 			<div style="clear: both; height: 20px;"></div>
-			<div class="jumbotron">
+			<div class="jumbotron" style="padding: 2rem 2rem;">
 			  <h1 class="display-4">Welcome to the Ocugine!</h1>
-			  <p class="lead">This is a simple example of usage Ocugine Services. Open <b>app.js</b> file and look how it's works.</p>
-			  <hr class="my-4">
-			  <p class="lead">
-				<a class="btn btn-primary btn-lg" target="_blank" href="https://docs.ocugine.pro/" role="button">Documentation</a>
-			  </p>
+			  <p class="lead">This is a simple example of usage Ocugine JavaScript SDK. Just select the desired object and method to display a sample code and run it as a test.</p>
 			</div>
 		</div>
 		<!-- HELLO WORLD -->
-	
+
+		<!-- CODE BLOCK -->
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="card">
+					  <div class="card-body">
+					    <h5 class="card-title">Ocugine Objects</h5>
+
+					    <p class="card-text">Choose an object of Ocugine JS SDK for testing.</p>
+					  </div>
+					</div>
+
+					<div style="clear: both; height: 20px;"></div>
+					<div class="card">
+					  <div class="card-body">
+					    <h5 class="card-title">Ocugine Methods</h5>
+
+					    <p class="card-text">Choose a method of Ocugine JS SDK for testing.</p>
+					  </div>
+					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="card">
+					  <div class="card-body">
+					    <h5 class="card-title">Usage Results</h5>
+
+					    <p class="card-text">Ocugine Usage Results</p>
+					  </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- CODE BLOCK -->
+
 		<!-- SCRIPTS -->
-		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/highlight.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-		
 		<script type="text/javascript" src="ocugine.js"></script>
-		<script type="text/javascript" src="app.js"></script>
+		<script type="text/javascript" src="app.js?v=2"></script>
 		<!-- SCRIPTS -->
 	</body>
 </html>

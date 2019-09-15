@@ -108,9 +108,9 @@ class OcugineSDK{
 				try{ // Trying to parse data
 					var _resp = JSON.parse(xhr.responseText); // Parse JSON
 					if(_resp.complete){ // Complete Status
-						_success(_resp); // Send Success Callback 
+						_success(_resp); // Send Success Callback
 					}else{ // Error Status
-						_error({ // Call Error 
+						_error({ // Call Error
 							message: _resp.message,
 							code: (_self._isEmpty(_resp.code) || !_self._isNumber(_resp.code))?-1:_resp.code
 						});
@@ -144,6 +144,9 @@ class OcugineSDK{
 	//	@returns		(object) module - Module Instance
 	//======================================================
 	module(name){
+		// Set Module Name
+		name = name.toLowerCase();
+
 		// Check Module Initialized
 		if(!this._isEmpty(this.modules[name]) && this._isObject(this.modules[name])){
 			return this.modules[name]; // Return Module
@@ -184,6 +187,19 @@ class OcugineSDK{
 		let url = (this.is_https)?"https://":"http://";	// Start from Protocol
 		url += this.server_url; // Prepare URL
 		url += "/"+this.server_gateway+"/"; // Set Server Gateway
+		return url; // Return URL
+	}
+
+	//======================================================
+	//	@method			_getServerUrl()
+	//	@usage			Get Server URL
+	//	@args				none
+	//	@returns		(string) url - API URL
+	//======================================================
+	_getServerUrl(){
+		let url = (this.is_https)?"https://":"http://";	// Start from Protocol
+		url += this.server_url; // Prepare URL
+		url += "/"; // Set Server Gateway
 		return url; // Return URL
 	}
 
@@ -294,12 +310,8 @@ class OcugineSDK{
 	//	@returns		(bool) Variable null/undefined state
 	//======================================================
 	_isEmpty(variable){
-		// Check Variable Exists
-		/*if(variable === undefined || variable== null){ // Not Exists or Null
-			return false;
-		}else{ // Exists
-			return true;
-		}*/
+		//return (variable === undefined || variable === null)?true:false;
+		return false;
 	}
 }
 
@@ -316,9 +328,10 @@ class Ocugine_Auth extends OcugineSDK{
 	constructor(parent){
 		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
-	}
 
-	/* TODO: Migrate from Previous Version of SDK */
+		// Set Default Values
+		this.access_token = localStorage.getItem('access_token');
+	}
 
 	//======================================================
 	//	@method			get_link()
@@ -328,7 +341,7 @@ class Ocugine_Auth extends OcugineSDK{
 	//							(method) error - Error Callback
 	//	@returns		none
 	//======================================================
-	get_link(grants, success, error){
+	getLink(grants, success, error){
 		// Set Callbacks
 		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
@@ -338,16 +351,9 @@ class Ocugine_Auth extends OcugineSDK{
 		this.call("oauth.get_link", {
 			app_id: this.instance.application.app_id,
 			app_key: this.instance.application.app_key,
+			grants: grants
 		}, function(data){
-			_success(data)
-			let wind;
-			wind = window.open(data.data.auth_url);
-			var timer = setInterval(function() { 
-				if(wind.closed) { 
-					clearInterval(timer); 
-					_self.get_token(); 
-				} 
-			}, 1000);
+			_success(data);
 		}, function(error){
 			_error(error);
 		});
@@ -360,63 +366,50 @@ class Ocugine_Auth extends OcugineSDK{
 	//							(method) error - Error Callback
 	//	@returns		none
 	//======================================================
-	get_token(success, error){
+	getToken(success, error){
 		// Set Callbacks
+		let _self = this;
 		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
-		
+
 		this.call("oauth.get_token", {
 			app_id: this.instance.application.app_id,
 			app_key: this.instance.application.app_key,
 		}, function(data){
-			localStorage.access_token = data.data.access_token;
-			_success(data);		
+			console.log(data.data.access_token);
+			_self.access_token = data.data.access_token;
+			localStorage.setItem("access_token", data.data.access_token);
+			_success(data);
 		}, function(error){
 			_error(error);
 		});
 	}
 
 	//======================================================
-	//	@method			get_link()
+	//	@method			logout()
 	//	@usage			Remove OAuth Token
-	//	@args				(string) token - Access Token
-	//							(method) success - Success Callback
+	//	@args				(method) success - Success Callback
 	//							(method) error - Error Callback
 	//	@returns		none
 	//======================================================
-	remove_token(token, success, error){
+	logout(success, error){
 		var _self = this;
-		
+
 		// Set Callbacks
 		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
-		var actoken = localStorage.getItem('access_token');
-
-		if(!actoken === true) {
-			_self.get_token(function(data) {				
-				_self.call("oauth.logout", {
-					access_token: localStorage.access_token
-				},
-				function() {
-					localStorage.removeItem('access_token');
-					_success(data);
-				},
-				function(error) {
-					_error(error);
-				});
-			});
-		} else {
-			this.call("oauth.logout", {
-				access_token: localStorage.access_token,
-			}, function(data){
-				localStorage.removeItem('access_token');
-				_success(data);				
-			}, function(error){
-			  _error(error);
-			});
-		}
+		_self.call("oauth.logout", {
+			access_token: localStorage.access_token
+		},function(data) {
+			_self.access_token = '';
+			localStorage.removeItem('access_token');
+			_success(data);
+		},function(error) {
+			_error(error);
+		});
 	}
 }
+
 //======================================================
 //	Ocugine Analytics
 //======================================================
@@ -432,7 +425,7 @@ class Ocugine_Analytics extends OcugineSDK{
 		this.instance = parent; // Set Parent Object
 	}
 
-	/* TODO: Migrate from Previous Version of SDK */
+
 }
 
 //======================================================
@@ -450,7 +443,6 @@ class Ocugine_Gaming extends OcugineSDK{
 		this.instance = parent; // Set Parent Object
 	}
 
-	/* TODO: Migrate from Previous Version of SDK */
 }
 
 //======================================================
@@ -468,7 +460,6 @@ class Ocugine_Monetization extends OcugineSDK{
 		this.instance = parent; // Set Parent Object
 	}
 
-	/* TODO: Migrate from Previous Version of SDK */
 }
 
 //======================================================
@@ -486,7 +477,6 @@ class Ocugine_Notifications extends OcugineSDK{
 		this.instance = parent; // Set Parent Object
 	}
 
-	/* TODO: Migrate from Previous Version of SDK */
 }
 
 //======================================================
@@ -504,7 +494,6 @@ class Ocugine_Marketing extends OcugineSDK{
 		this.instance = parent; // Set Parent Object
 	}
 
-	/* TODO: Migrate from Previous Version of SDK */
 }
 
 //======================================================
@@ -522,7 +511,6 @@ class Ocugine_Ads extends OcugineSDK{
 		this.instance = parent; // Set Parent Object
 	}
 
-	/* TODO: Migrate from Previous Version of SDK */
 }
 
 //======================================================
@@ -547,11 +535,11 @@ class Ocugine_Backend extends OcugineSDK{
 	//							(method) success - Success Callback
 	//							(method) error - Error Callback
 	//======================================================
-	get_content_list(success, error){
+	getContentList(success, error){
 		// Set Callbacks
 		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
-		
+
 		this.call("cloud.get_content_list", {
 			app_id: this.instance.application.app_id,
 			app_key: this.instance.application.app_key,
@@ -569,11 +557,11 @@ class Ocugine_Backend extends OcugineSDK{
 	//							(method) success - Success Callback
 	//							(method) error - Error Callback
 	//======================================================
-	get_content(success, error){
+	getContent(success, error){
 		// Set Callbacks
 		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
-		
+
 		this.call("cloud.get_content", {
 			app_id: this.instance.application.app_id,
 			app_key: this.instance.application.app_key,
@@ -601,7 +589,6 @@ class Ocugine_Reports extends OcugineSDK{
 		this.instance = parent; // Set Parent Object
 	}
 
-	/* TODO: Migrate from Previous Version of SDK */
 }
 
 //======================================================
@@ -619,7 +606,6 @@ class Ocugine_Perfomance extends OcugineSDK{
 		this.instance = parent; // Set Parent Object
 	}
 
-	/* TODO: Migrate from Previous Version of SDK */
 }
 
 //======================================================
@@ -635,8 +621,6 @@ class Ocugine_Localization extends OcugineSDK{
 		this.instance = parent; // Set Parent Object
 	}
 
-	/* TODO: Migrate from Previous Version of SDK */
-
 	//======================================================
 	//	@method			get_language()
 	//	@usage			Get Language Info
@@ -644,7 +628,7 @@ class Ocugine_Localization extends OcugineSDK{
 	//							(method) success - Success Callback
 	//							(method) error - Error Callback
 	//======================================================
-	get_language(code, success, error){
+	getLanguage(code, success, error){
 		// Check Params
 		if(this._isEmpty(code) || !this._isString(code)){
 			throw "Failed to get language info. Please, type language code and try again.";
@@ -675,7 +659,7 @@ class Ocugine_Localization extends OcugineSDK{
 	//							(method) success - Success Callback
 	//							(method) error - Error Callback
 	//======================================================
-	get_locale(code, lang, success, error){
+	getLocale(code, lang, success, error){
 		// Check Params
 		if(this._isEmpty(code) || this._isEmpty(lang) || !this._isString(code) || !this._isString(lang)){
 			throw "Failed to get locale value. Please, type locale code and language.";
@@ -714,6 +698,23 @@ class Ocugine_Users extends OcugineSDK{
 	constructor(parent){
 		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
+
+		var _self = this;
+
+		// Objects
+		this.policy = {};
+		this.user = {};
+
+		// Methods map
+		this.policy.getList = function(success, error){
+			_self.getPolicyList(success, error);
+		};
+		this.policy.getInfo = function(policy_id, success, error){
+			_self.getPolicyInfo(policy_id, success, error);
+		};
+		this.user.getBanState = function(profile_uid, success, error){
+			_self.getBanState(profile_uid, success, error);
+		};
 	}
 
 	//======================================================
@@ -722,11 +723,11 @@ class Ocugine_Users extends OcugineSDK{
 	//							(method) success - Success Callback
 	//							(method) error - Error Callback
 	//======================================================
-	get_policy_list(success, error){
+	getPolicyList(success, error){
 		// Set Callbacks
 		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
-		
+
 		// Call API Request
 		this.call("users.get_policy_list", {
 			app_id: this.instance.application.app_id,
@@ -736,17 +737,17 @@ class Ocugine_Users extends OcugineSDK{
 		}, function(error){
 			_error(error);
 		});
-		
+
 	}
 
 	//======================================================
 	//	@method			get_policy_info()
 	//	@usage			Get policy info
-	//	@args				(string/array) grants - OAuth grants
+	//	@args				(double) policy_id - Policy ID
 	//							(method) success - Success Callback
 	//							(method) error - Error Callback
 	//======================================================
-	get_policy_info(success, error){
+	getPolicyInfo(policy_id, success, error){
 		// Set Callbacks
 		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
@@ -755,14 +756,114 @@ class Ocugine_Users extends OcugineSDK{
 		this.call("users.get_policy_info", {
 			app_id: this.instance.application.app_id,
 			app_key: this.instance.application.app_key,
-			pid: this.instance.application.pid,
+			pid: policy_id
 		}, function(data){
 			_success(data);
 		}, function(error){
 			_error(error);
 		});
-		
 	}
+
+	//======================================================
+	//	@method			get_ban_state()
+	//	@usage			Get Ban State
+	//	@args				(double) profile_uid - Profile UID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	getBanState(profile_uid, success, error){
+
+	}
+
+	getChatRooms(){
+
+	}
+
+	getChatMessages(){
+
+	}
+
+	sendChatMessages(){
+
+	}
+
+	getDialogs(){
+
+	}
+
+	getMessages(){
+
+	}
+
+	sendMessage(){
+
+	}
+
+	getNotifications(){
+
+	}
+
+	getNotificationData(){
+
+	}
+
+	getUserData(){
+
+	}
+
+	findUser(){
+
+	}
+
+	getUserByUID(){
+
+	}
+
+	getGroupsList(){
+
+	}
+
+	getGroupData(){
+
+	}
+
+	setUserGroup(){
+
+	}
+
+	getUsersList(){
+
+	}
+
+	getAdvancedProfileFields(){
+
+	}
+
+	getSupportCategories(){
+
+	}
+
+	getSupportTopics(){
+
+	}
+
+	getSupportMessages(){
+
+	}
+
+	createSupportTopic(){
+
+	}
+
+	closeSupportTopic(){
+
+	}
+
+	sendReview(){
+
+	}
+
 }
 
 //======================================================
@@ -780,16 +881,61 @@ class Ocugine_UI extends OcugineSDK{
 		this.instance = parent; // Set Parent Object
 	}
 
-	/* TODO: Migrate from Previous Version of SDK */
 	//======================================================
 	//	@method			showOAuth()
 	//	@usage			Show OAuth Window and process auth for
 	//							this application
-	//	@args				none
+	//	@args				(method) success - Success Callback
+	//							(method) error - Error Callback
 	//	@returns		none
 	//======================================================
-	showOAuth(){
+	showOAuth(success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
 
+		// Get Link
+		if(_self.instance._isString(_self.instance.module("auth").access_token) && _self.instance.module("auth").access_token.length>0){
+			_success(); // Done
+		}else{
+			this.instance.module("auth").getLink("all", function(data){
+				let wind; wind = window.open(data.data.auth_url); // Window
+				let timer = setInterval(function() { // Interval for Checking
+					if(wind.closed) { // Window Closed
+						clearInterval(timer); // Clear Timer
+						_self.instance.module("auth").getToken(function(){
+							_success(); // Done
+						}, function(err){
+							_error(err);
+						});
+					}
+				}, 1000);
+			}, function(err){
+				_error(err); // Throw Error
+			});
+		}
+	}
+
+	//======================================================
+	//	@method			showProfile()
+	//	@usage			Show Profile Page
+	//	@args				(method) closed - Closed Callback
+	//	@returns		none
+	//======================================================
+	showProfile(closed){
+		var _self = this;
+		let _closed = (this._isEmpty(closed) || !this._isFunction(closed))?function(){}:closed; // Success Callback
+		let wind; wind = window.open(_self.parent._getServerUrl()); // Window
+
+
+		// Set timer
+		let timer = setInterval(function() { // Interval for Checking
+			if(wind.closed) { // Window Closed
+				clearInterval(timer); // Clear Timer
+				_closed();
+			}
+		}, 1000);
 	}
 }
 
@@ -807,8 +953,6 @@ class Ocugine_Utils extends OcugineSDK{
 		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
 	}
-
-	/* TODO: Migrate from Previous Version of SDK */
 
 	//======================================================
 	//	@method			getAPIState()
@@ -882,7 +1026,7 @@ class Ocugine_Utils extends OcugineSDK{
 		// Set Callbacks
 		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
-		
+
 		// Call API Request
 		this.call("api_settings.get_settings", {
 			app_id: this.instance.application.app_id,
@@ -892,17 +1036,6 @@ class Ocugine_Utils extends OcugineSDK{
 		}, function(error){
 			_error(error);
 		});
-	}
-
-
-	//======================================================
-	//	@method			test()
-	//	@usage			Module Testing
-	//	@args			none
-	//	@returns		none
-	//======================================================
-	test(){
-		console.log("Module successfully works!");
 	}
 }
 
