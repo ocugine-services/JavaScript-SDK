@@ -52,15 +52,28 @@ $(document).ready(function(){
 		app_id: 59,
 		app_key: "0839d2a962df2544bdb76c10a2ba5f296c6b32c6"
 	}, { // SDK Settings
-		language: "EN"
+		language: "EN",
+		auto_analytics: true
 	}, true);
 
-	// Show OAuth
-	OSDK.module("UI").showOAuth(function(){
-		console.log("User Authenticated. Access Token: "+OSDK.module("Auth").access_token);
-		OSDK.module("Users").policy.getInfo(9, function(dt){ console.log(dt); }, function(err){console.log(err); });
-	}, function(error){
-		alert(error.message);
-	});
-
+	// Check Access Token
+	if(OSDK.module("Auth").access_token=="" || OSDK.module("Auth").access_token.length<0){ // Not Authenticated
+		OSDK.module("UI").showOAuth(function(){
+			initializeJSTester(OSDK); // Init Tester
+		}, function(error){
+			alert(error);
+		});
+	}else{ // Authenticated
+		initializeJSTester(OSDK); // Init Tester
+	}
 });
+
+//======================================================
+//	App Testing
+//======================================================
+function initializeJSTester(OSDK){
+	//OSDK.module("Analytics").getFlags();
+	//OSDK.module("localization").getLanguagesList();
+	//OSDK.module("gaming").leaderboards.getLeaderboards();
+	//OSDK.module("gaming").missions.getList("Mission #2");
+}

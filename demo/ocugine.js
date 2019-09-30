@@ -55,9 +55,10 @@ class OcugineSDK{
 		}
 
 		// Set Base Settings
+		this.platform = "web";									// SDK Platform
 		this.application = app_settings; 				// Set Application Settings
 		this.settings = sdk_settings; 					// Set SDK settings
-		this.debug = (this._isEmpty(debug) || !this._isBoolean(debug))?false:debug;	// Set Debug Params
+		this.debug = (debug)?true:false;				// Set Debug Params
 
 		// Set Another SDK Params
 		this.is_https = true;							// HTTP/HTTPs Mode
@@ -66,6 +67,13 @@ class OcugineSDK{
 
 		// Set Utils
 		this.modules = {};								// Modules
+
+		// Send First Open flag and Session Start
+		if(this.settings.auto_analytics){
+			this.module("Analytics").sendUserFlag("first_open");
+			this.module("Analytics").sendUserFlag("session_update");
+			this.module("Analytics").updateRetention();
+		}
 	}
 
 	//======================================================
@@ -79,8 +87,6 @@ class OcugineSDK{
 	//  #CALLISHERE
 	//======================================================
 	call(method, data, success, error){
-		//if(method == 'oauth.logout') { debugger; }
-
 		// Check Method
 		var _self = this;
 		if(this._isEmpty(method) || !this._isString(method)) throw "API Method argument must contain string object and method name. For example: users.get_list";
@@ -108,14 +114,17 @@ class OcugineSDK{
 				try{ // Trying to parse data
 					var _resp = JSON.parse(xhr.responseText); // Parse JSON
 					if(_resp.complete){ // Complete Status
-						_success(_resp); // Send Success Callback
+						if(_self.debug) console.log(_resp.data);
+						_success(_resp.data); // Send Success Callback
 					}else{ // Error Status
+						if(_self.debug) console.log(_resp.message);
 						_error({ // Call Error
 							message: _resp.message,
 							code: (_self._isEmpty(_resp.code) || !_self._isNumber(_resp.code))?-1:_resp.code
 						});
 					}
 				}catch{ // Error
+					if(_self.debug) console.log("Failed to decode server response. Please, try again later or contact us. Response Data: " + xhr.responseText);
 					_error({ // Call Error _
 						message: "Failed to decode server response. Please, try again later or contact us.",
 						code: 98
@@ -318,7 +327,7 @@ class OcugineSDK{
 //======================================================
 //	Ocugine Auth
 //======================================================
-class Ocugine_Auth extends OcugineSDK{
+class Ocugine_Auth{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
@@ -326,10 +335,10 @@ class Ocugine_Auth extends OcugineSDK{
 	//	@returns		none
 	//======================================================
 	constructor(parent){
-		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
 
 		// Set Default Values
+		this.auth_key = ''; // Auth Key Temporary
 		this.access_token = localStorage.getItem('access_token');
 	}
 
@@ -343,16 +352,18 @@ class Ocugine_Auth extends OcugineSDK{
 	//======================================================
 	getLink(grants, success, error){
 		// Set Callbacks
-		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
-		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
-		var _self = this; // Link
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
 		// Call API Request
-		this.call("oauth.get_link", {
-			app_id: this.instance.application.app_id,
-			app_key: this.instance.application.app_key,
+		_self.instance.call("oauth.get_link", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
 			grants: grants
 		}, function(data){
+			_self.auth_key = data.auth_key;
+			localStorage.setItem("auth_key", _self.auth_key);
 			_success(data);
 		}, function(error){
 			_error(error);
@@ -360,7 +371,7 @@ class Ocugine_Auth extends OcugineSDK{
 	}
 
 	//======================================================
-	//	@method			get_link()
+	//	@method			getToken()
 	//	@usage			Get OAuth Token
 	//							(method) success - Success Callback
 	//							(method) error - Error Callback
@@ -369,18 +380,52 @@ class Ocugine_Auth extends OcugineSDK{
 	getToken(success, error){
 		// Set Callbacks
 		let _self = this;
-		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
-		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
-		this.call("oauth.get_token", {
-			app_id: this.instance.application.app_id,
-			app_key: this.instance.application.app_key,
-		}, function(data){
-			console.log(data.data.access_token);
-			_self.access_token = data.data.access_token;
-			localStorage.setItem("access_token", data.data.access_token);
+		// Request Data
+		let _rd = { // Request Data
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			auth_key: localStorage.getItem("auth_key")
+		};
+
+		_self.instance.call("oauth.get_token", _rd, function(data){
+			_self.access_token = data.access_token;
+			localStorage.setItem("access_token", data.access_token);
+			localStorage.setItem("auth_key", "");
 			_success(data);
 		}, function(error){
+			console.log(error);
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			getGrants()
+	//	@usage			Get OAuth Grants by Token
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	getGrants(success, error){
+		// Set Callbacks
+		let _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !thi_self.instances._isFunction(error))?function(){}:error; // Error Callback
+
+		// Request Data
+		let _rd = { // Request Data
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			access_token: localStorage.access_token
+		};
+
+		_self.instance.call("oauth.get_grants", _rd, function(data){
+			_self.access_token = data.access_token;
+			_success(data);
+		}, function(error){
+			console.log(error);
 			_error(error);
 		});
 	}
@@ -396,9 +441,9 @@ class Ocugine_Auth extends OcugineSDK{
 		var _self = this;
 
 		// Set Callbacks
-		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
-		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
-		_self.call("oauth.logout", {
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+		_self.instance.call("oauth.logout", {
 			access_token: localStorage.access_token
 		},function(data) {
 			_self.access_token = '';
@@ -413,25 +458,157 @@ class Ocugine_Auth extends OcugineSDK{
 //======================================================
 //	Ocugine Analytics
 //======================================================
-class Ocugine_Analytics extends OcugineSDK{
+class Ocugine_Analytics{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
-	//	@args			none
+	//	@args				none
 	//	@returns		none
 	//======================================================
 	constructor(parent){
-		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
+		this.app_flags = null; // Application Flags
+		this.user_flags = null; // Latest User Flags
 	}
 
+	//======================================================
+	//	@method			updateRetention()
+	//	@usage			Update User Retention
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	updateRetention(success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
+		// Call API Request
+		_self.instance.call("analytics.update_retention", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			access_token: localStorage.getItem('access_token')
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			getFlags()
+	//	@usage			Get Available Application Flags
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	getFlags(success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("analytics.get_available_flags", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key
+		}, function(data){
+			_self.app_flags = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			sendUserFlag()
+	//	@usage			Send User Analytics Flag
+	//							(string) flag - Analytic Flag
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	sendUserFlag(flag, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+		var _access_token = (localStorage.getItem("access_token")!="")?localStorage.getItem("access_token"):"";
+
+		// Call API Request
+		_self.instance.call("analytics.set_user_flag", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			flag: flag,
+			access_token: _access_token
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			getUserFlag()
+	//	@usage			Get User Analytics Flag
+	//							(string) flag - Analytic Flag
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	getUserFlag(flag, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+		var _access_token = (localStorage.getItem("access_token")!="")?localStorage.getItem("access_token"):"";
+
+		// Call API Request
+		_self.instance.call("analytics.get_user_flag", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			flag: flag,
+			access_token: _access_token
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			getLatestUserFlag()
+	//	@usage			Get Latest User Flags
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	getLatestUserFlag(success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+		var _access_token = (localStorage.getItem("access_token")!="")?localStorage.getItem("access_token"):"";
+
+		// Call API Request
+		_self.instance.call("analytics.get_latest_user_flags", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			access_token: _access_token
+		}, function(data){
+			_self.user_flags = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
 }
 
 //======================================================
 //	Ocugine Gaming
 //======================================================
-class Ocugine_Gaming extends OcugineSDK{
+class Ocugine_Gaming{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
@@ -439,16 +616,508 @@ class Ocugine_Gaming extends OcugineSDK{
 	//	@returns		none
 	//======================================================
 	constructor(parent){
-		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
+		var _self = this;
+
+		// Create Subobjects
+		this.leaderboards = {};
+		this.achievements = {};
+		this.missions = {};
+
+		// Method Wrappers
+		this.leaderboards.list = null;
+		this.leaderboards.getList = function(success, error){
+			_self._getLeaderboards(success, error);
+		};
+		this.leaderboards.getData = function(uid, success, error){
+			_self._getLeaderboardData(uid, success, error);
+		};
+		this.leaderboards.getPlayersTop = function(uid, success, error){
+			_self._getPlayersTop(uid, success, error);
+		};
+		this.leaderboards.getScores = function(uid, success, error){
+			_self._getBoardScores(uid, success, error);
+		};
+		this.leaderboards.setScores = function(uid, scores, success, error){
+			_self._setBoardScores(uid, scores, success, error);
+		};
+		this.achievements.list = null;
+		this.achievements.getList = function(success, error){
+			_self._getAchievements(success, error);
+		};
+		this.achievements.getData = function(uid, success, error){
+			_self._getAchievementData(uid, success, error);
+		};
+		this.achievements.getPlayerList = function(success, error){
+			_self._getPlayerAchievements(success, error);
+		};
+		this.achievements.unlock = function(uid, success, error){
+			_self._unlockPlayerAchievement(uid, success, error);
+		};
+		this.missions.list = null;
+		this.missions.getList = function(search = "", page = 1, success, error){
+			_self._getMissions(search, page, success, error);
+		};
+		this.missions.getData = function(uid, success, error){
+			_self._getAchievementData(uid, success, error);
+		};
+		this.missions.getPlayerList = function(success, error){
+			_self._getPlayerMissionsList(success, error);
+		};
+		this.missions.addToList = function(uid, success, error){
+			_self._addMissionToPlayerList(uid, success, error);
+		};
+		this.missions.removeFromList = function(uid, success, error){
+			_self._removeMissionFromPlayerList(uid, success, error);
+		};
+		this.missions.setScores = function(uid, scores, success, error){
+			_self._setMissionsScores(uid, scores, success, error);
+		};
 	}
 
+	//======================================================
+	//	@method			_getLeaderboards()
+	//	@usage			Get Leaderboards
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getLeaderboards(success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("gaming.get_leaderboards", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key
+		}, function(data){
+			_self.leaderboards.list = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getLeaderboardData()
+	//	@usage			Get Leaderboard data
+	//							(double) uid - Leaderboard UID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getLeaderboardData(uid, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("gaming.get_leaderboard_info", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			uid: uid
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getPlayersTop()
+	//	@usage			Get Players Top data for Leaderboard
+	//							(double) uid - Leaderboard UID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getPlayersTop(uid, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("gaming.get_players_top", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			uid: uid
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getBoardScores()
+	//	@usage			Get Board Scores for current player
+	//							(double) uid - Leaderboard UID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getBoardScores(uid, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Check Access Token
+		if(localStorage.getItem('access_token')!=""){
+			// Call API Request
+			_self.instance.call("gaming.get_board_scores", {
+				app_id: _self.instance.application.app_id,
+				app_key: _self.instance.application.app_key,
+				uid: uid,
+				access_token: localStorage.getItem('access_token')
+			}, function(data){
+				_success(data);
+			}, function(error){
+				_error(error);
+			});
+		}else{
+			_error("Failed to get Leaderboard Scores. Player is not Authenticated");
+		}
+	}
+
+	//======================================================
+	//	@method			_setBoardScores()
+	//	@usage			Set Board Scores for current player
+	//							(double) uid - Leaderboard UID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_setBoardScores(uid, scores, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Check Access Token
+		if(localStorage.getItem('access_token')!=""){
+			// Call API Request
+			_self.instance.call("gaming.set_board_scores", {
+				app_id: _self.instance.application.app_id,
+				app_key: _self.instance.application.app_key,
+				uid: uid,
+				scores: scores,
+				access_token: localStorage.getItem('access_token')
+			}, function(data){
+				_success(data);
+			}, function(error){
+				_error(error);
+			});
+		}else{
+			_error("Failed to set Leaderboard Scores. Player is not Authenticated");
+		}
+	}
+
+	//======================================================
+	//	@method			_getAchievements()
+	//	@usage			Get Achievements
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getAchievements(success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("gaming.get_achievements", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key
+		}, function(data){
+			_self.achievements.list = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getAchievementData()
+	//	@usage			Get Achievement Data
+	//							(double) uid - Achievement UID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getAchievementData(uid, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("gaming.get_achievement_info", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			uid: uid
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getPlayerAchievement()
+	//	@usage			Get Achievements for current player
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getPlayerAchievements(success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Check Access Token
+		if(localStorage.getItem('access_token')!=""){
+			// Call API Request
+			_self.instance.call("gaming.get_player_achievements", {
+				app_id: _self.instance.application.app_id,
+				app_key: _self.instance.application.app_key,
+				access_token: localStorage.getItem('access_token')
+			}, function(data){
+				_success(data);
+			}, function(error){
+				_error(error);
+			});
+		}else{
+			_error("Failed to get achievement state. Player is not Authenticated");
+		}
+	}
+
+	//======================================================
+	//	@method			_unlockPlayerAchievement()
+	//	@usage			Unlock Achievement for current player
+	//							(double) uid - Achievement UID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_unlockPlayerAchievement(uid, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Check Access Token
+		if(localStorage.getItem('access_token')!=""){
+			// Call API Request
+			_self.instance.call("gaming.unlock_player_achievement", {
+				app_id: _self.instance.application.app_id,
+				app_key: _self.instance.application.app_key,
+				uid: uid,
+				access_token: localStorage.getItem('access_token')
+			}, function(data){
+				_success(data);
+			}, function(error){
+				_error(error);
+			});
+		}else{
+			_error("Failed to unlock achievement. Player is not Authenticated");
+		}
+	}
+
+	//======================================================
+	//	@method			_getMissions()
+	//	@usage			Get Missions List
+	//							(string) search - Search by Mission Name or Desc
+	//							(double) page - Page UID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getMissions(search = "", page = 1, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("gaming.get_missions", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			search: search,
+			page: page
+		}, function(data){
+			_self.missions.list = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getMissionData()
+	//	@usage			Get Mission Data by UID
+	//							(double) uid - Achievement UID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getMissionData(uid, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("gaming.get_mission_info", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			uid: uid
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getPlayerMissionsList()
+	//	@usage			Get Current Player Missions List
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getPlayerMissionsList(success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Check Access Token
+		if(localStorage.getItem('access_token')!=""){
+			// Call API Request
+			_self.instance.call("gaming.get_player_missions", {
+				app_id: _self.instance.application.app_id,
+				app_key: _self.instance.application.app_key,
+				access_token: localStorage.getItem('access_token')
+			}, function(data){
+				_success(data);
+			}, function(error){
+				_error(error);
+			});
+		}else{
+			_error("Failed to get Player's missions list. Player is not Authenticated");
+		}
+	}
+
+	//======================================================
+	//	@method			_addMissionToPlayerList()
+	//	@usage			Add Mission from To Player List
+	//							(double) uid - Mission UID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_addMissionToPlayerList(uid, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Check Access Token
+		if(localStorage.getItem('access_token')!=""){
+			// Call API Request
+			_self.instance.call("gaming.set_player_mission", {
+				app_id: _self.instance.application.app_id,
+				app_key: _self.instance.application.app_key,
+				access_token: localStorage.getItem('access_token'),
+				uid: uid
+			}, function(data){
+				_success(data);
+			}, function(error){
+				_error(error);
+			});
+		}else{
+			_error("Failed to add mission to Player's List. Player is not Authenticated");
+		}
+	}
+
+	//======================================================
+	//	@method			_removeMissionFromPlayerList()
+	//	@usage			Remove Mission from Player List
+	//							(double) uid - Mission UID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_removeMissionFromPlayerList(uid, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Check Access Token
+		if(localStorage.getItem('access_token')!=""){
+			// Call API Request
+			_self.instance.call("gaming.remove_player_mission", {
+				app_id: _self.instance.application.app_id,
+				app_key: _self.instance.application.app_key,
+				access_token: localStorage.getItem('access_token'),
+				uid: uid
+			}, function(data){
+				_success(data);
+			}, function(error){
+				_error(error);
+			});
+		}else{
+			_error("Failed to remove mission from Player's List. Player is not Authenticated");
+		}
+	}
+
+	//======================================================
+	//	@method			_setMissionsScores()
+	//	@usage			Set Mission Scores for Player
+	//							(double) uid - Mission UID
+	//							(double) scores - Player Scores
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_setMissionsScores(uid, scores, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Check Access Token
+		if(localStorage.getItem('access_token')!=""){
+			// Call API Request
+			_self.instance.call("gaming.set_mission_scores", {
+				app_id: _self.instance.application.app_id,
+				app_key: _self.instance.application.app_key,
+				access_token: localStorage.getItem('access_token'),
+				uid: uid,
+				scores: scores
+			}, function(data){
+				_success(data);
+			}, function(error){
+				_error(error);
+			});
+		}else{
+			_error("Failed to set Mission Scores. Player is not Authenticated");
+		}
+	}
 }
 
 //======================================================
 //	Ocugine Monetization
 //======================================================
-class Ocugine_Monetization extends OcugineSDK{
+class Ocugine_Monetization{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
@@ -456,16 +1125,16 @@ class Ocugine_Monetization extends OcugineSDK{
 	//	@returns		none
 	//======================================================
 	constructor(parent){
-		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
 	}
 
+	/* TODO: Monetization Module is coming soon */
 }
 
 //======================================================
 //	Ocugine Notifications
 //======================================================
-class Ocugine_Notifications extends OcugineSDK{
+class Ocugine_Notifications{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
@@ -473,16 +1142,65 @@ class Ocugine_Notifications extends OcugineSDK{
 	//	@returns		none
 	//======================================================
 	constructor(parent){
-		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
 	}
 
+	//======================================================
+	//	@method			getList()
+	//	@usage			Get Notifications List
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	getList(success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("gaming.get_notifications", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			platform: _self.instance.platform,
+			access_token: localStorage.getItem('access_token')
+		}, function(data){
+			_self.leaderboards.list = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	};
+
+	//======================================================
+	//	@method			getData()
+	//	@usage			Get Notification Data
+	//							(double) uid - Notification UID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	getData(uid, success, error){
+
+	};
+
+	//======================================================
+	//	@method			readNotification()
+	//	@usage			Read Notification Data
+	//							(double) uid - Notification UID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	readNotification(uid, success, error){
+
+	};
 }
 
 //======================================================
 //	Ocugine Marketing
 //======================================================
-class Ocugine_Marketing extends OcugineSDK{
+class Ocugine_Marketing{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
@@ -490,16 +1208,20 @@ class Ocugine_Marketing extends OcugineSDK{
 	//	@returns		none
 	//======================================================
 	constructor(parent){
-		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
+
+		// Set Objects
+		this.promos = {};
+		this.experiments = {};
 	}
 
+	/* TODO: Marketing Module is coming soon */
 }
 
 //======================================================
 //	Ocugine Ads
 //======================================================
-class Ocugine_Ads extends OcugineSDK{
+class Ocugine_Ads{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
@@ -507,16 +1229,20 @@ class Ocugine_Ads extends OcugineSDK{
 	//	@returns		none
 	//======================================================
 	constructor(parent){
-		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
+
+		// Set Wrappers
+		this.ads = {};
+		this.video = {};
 	}
 
+	/* TODO: Ads Module is coming soon */
 }
 
 //======================================================
 //	Ocugine Backend
 //======================================================
-class Ocugine_Backend extends OcugineSDK{
+class Ocugine_Backend{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
@@ -524,26 +1250,46 @@ class Ocugine_Backend extends OcugineSDK{
 	//	@returns		none
 	//======================================================
 	constructor(parent){
-		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
+		var _self = this;
+
+		// Create Subobjects
+		this.storage = {};
+		this.database = {};
+		this.multiplayer = {};
+		this.liveconfs = {};
+		this.backend = {};
+
+		// Method Wrappers
+		this.storage.list = null;
+		this.storage.getList = function(search = "", page = 1, success, error){
+			_self._getContentList(search, page, success, error);
+		};
+		this.storage.getContent = function(content_id, success, error){
+			_self._getContent(content_id, success, error);
+		};
+
 	}
 
 	//======================================================
-	//	@method			get_content_list()
-	//	@usage			Get content Info
-	//	@args				(obj) grants - grants
-	//							(method) success - Success Callback
+	//	@method			_getContentList()
+	//	@usage			Get content List
+	//	@args				(method) success - Success Callback
 	//							(method) error - Error Callback
 	//======================================================
-	getContentList(success, error){
+	_getContentList(search = "", page = 1, success, error){
 		// Set Callbacks
+		var _self = this;
 		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
 
-		this.call("cloud.get_content_list", {
+		_self.instance.call("cloud.get_content_list", {
 			app_id: this.instance.application.app_id,
 			app_key: this.instance.application.app_key,
+			search: search,
+			page: page
 		}, function(data){
+			_self.storage.list = data.list;
 			_success(data);
 		}, function(error){
 			_error(error);
@@ -551,33 +1297,35 @@ class Ocugine_Backend extends OcugineSDK{
 	}
 
 	//======================================================
-	//	@method			get_content()
-	//	@usage			Get content
-	//	@args				(obj) grants - grants
+	//	@method			_getContent()
+	//	@usage			Get content Data
+	//	@args				(double) content_id - Content ID
 	//							(method) success - Success Callback
 	//							(method) error - Error Callback
 	//======================================================
-	getContent(success, error){
+	_getContent(content_id, success, error){
 		// Set Callbacks
 		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
 
-		this.call("cloud.get_content", {
+		_self.instance.call("cloud.get_content", {
 			app_id: this.instance.application.app_id,
 			app_key: this.instance.application.app_key,
-			cid: this.instance.applicatiыon.cid
+			cid: content_id
 		}, function(data){
 			_success(data);
 		}, function(error){
 			_error(error);
 		});
 	}
+
+
 }
 
 //======================================================
 //	Ocugine Reports
 //======================================================
-class Ocugine_Reports extends OcugineSDK{
+class Ocugine_Reports{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
@@ -585,25 +1333,14 @@ class Ocugine_Reports extends OcugineSDK{
 	//	@returns		none
 	//======================================================
 	constructor(parent){
-		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
-	}
+		var _self = this;
 
-}
+		// Create Subobjects
+		this.errors = {};
+		this.performance = {};
 
-//======================================================
-//	Ocugine Perfomance
-//======================================================
-class Ocugine_Perfomance extends OcugineSDK{
-	//======================================================
-	//	@method			constructor()
-	//	@usage			Class Constructor
-	//	@args			none
-	//	@returns		none
-	//======================================================
-	constructor(parent){
-		super(); // Set Constructor
-		this.instance = parent; // Set Parent Object
+		// Create Methods Wrappers
 	}
 
 }
@@ -611,38 +1348,105 @@ class Ocugine_Perfomance extends OcugineSDK{
 //======================================================
 //	Ocugine Localization
 //======================================================
-class Ocugine_Localization extends OcugineSDK{
+class Ocugine_Localization{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
 	//======================================================
 	constructor(parent){
-		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
+		this.last_languages = null; // languages
+		this.last_locales = null;
+
+		// Create Subobjects
+		this.languages = {};
+		this.locales = {};
+
+		// Create Wrappers
+		this.languages.getList = function(success, error){
+			_self._getLanguagesList(success, error);
+		};
+		this.languages.getLanguage = function(code, success, error){
+			_self._getLocalesList(code, success, error);
+		};
+		this.locales.getList = function(search = "", page = 1, success, error){
+			_self._getLocalesList(success, error, search, page);
+		};
+		this.locales.getLocale = function(code, lang, success, error){
+			_self._getLocale(code, lang, success, error);
+		};
 	}
 
 	//======================================================
-	//	@method			get_language()
+	//	@method			_getLanguagesList()
+	//	@usage			Get Languages List
+	//	@args				(method) success - Success Callback
+	//							(method) error - Error Callback
+	//======================================================
+	_getLanguagesList(success, error){
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("localization.get_lang_list", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key
+		}, function(data){
+			_self.last_languages = data.list; // Set Languages List
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getLocalesList()
+	//	@usage			Get Locales List
+	//	@args				(method) success - Success Callback
+	//							(method) error - Error Callback
+	//======================================================
+	_getLocalesList(success, error, search ="", page = 1){
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("localization.get_locale_list", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			search: search,
+			page: page
+		}, function(data){
+			_self.last_locales = data.list; // Set Languages List
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getLanguage()
 	//	@usage			Get Language Info
 	//	@args				(string) code - Language Code
 	//							(method) success - Success Callback
 	//							(method) error - Error Callback
 	//======================================================
-	getLanguage(code, success, error){
+	_getLanguage(code, success, error){
 		// Check Params
-		if(this._isEmpty(code) || !this._isString(code)){
+		var _self = this;
+		if(_self.instance._isEmpty(code) || !_self.instance._isString(code)){
 			throw "Failed to get language info. Please, type language code and try again.";
 		}
 
 		// Set Callbacks
-		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
-		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
-		var _self = this; // Link
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
 		// Call API Request
-		this.call("localization.get_lang", {
-			app_id: this.instance.application.app_id,
-			app_key: this.instance.application.app_key,
+		_self.instance.call("localization.get_lang", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
 			code: code
 		}, function(data){
 			_success(data);
@@ -652,28 +1456,28 @@ class Ocugine_Localization extends OcugineSDK{
 	}
 
 	//======================================================
-	//	@method			get_locale()
+	//	@method			_getLocale()
 	//	@usage			Get Locale Data
 	//	@args				(string) code - Locale Code
 	//							(string) lang - language
 	//							(method) success - Success Callback
 	//							(method) error - Error Callback
 	//======================================================
-	getLocale(code, lang, success, error){
+	_getLocale(code, lang, success, error){
 		// Check Params
-		if(this._isEmpty(code) || this._isEmpty(lang) || !this._isString(code) || !this._isString(lang)){
+		var _self = this;
+		if(_self.instance._isEmpty(code) || _self.instance._isEmpty(lang) || !_self.instance._isString(code) || !_self.instance._isString(lang)){
 			throw "Failed to get locale value. Please, type locale code and language.";
 		}
 
 		// Set Callbacks
-		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
-		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
-		var _self = this; // Link
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
 		// Call API Request
-		this.call("localization.get_locale", {
-			app_id: this.instance.application.app_id,
-			app_key: this.instance.application.app_key,
+		_self.instance.call("localization.get_locale", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
 			code: code,
 			lang: lang
 		}, function(data){
@@ -688,7 +1492,7 @@ class Ocugine_Localization extends OcugineSDK{
 //======================================================
 //	Ocugine Users
 //======================================================
-class Ocugine_Users extends OcugineSDK{
+class Ocugine_Users{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
@@ -696,7 +1500,6 @@ class Ocugine_Users extends OcugineSDK{
 	//	@returns		none
 	//======================================================
 	constructor(parent){
-		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
 
 		var _self = this;
@@ -704,58 +1507,64 @@ class Ocugine_Users extends OcugineSDK{
 		// Objects
 		this.policy = {};
 		this.user = {};
+		this.support = {};
+		this.chats = {};
+		this.dialogs = {};
+		this.reviews = {};
 
 		// Methods map
+		this.policy.list = null;
 		this.policy.getList = function(success, error){
-			_self.getPolicyList(success, error);
+			_self._getPolicyList(success, error);
 		};
 		this.policy.getInfo = function(policy_id, success, error){
-			_self.getPolicyInfo(policy_id, success, error);
+			_self._getPolicyInfo(policy_id, success, error);
 		};
+		this.user.currentUser = null;
 		this.user.getBanState = function(profile_uid, success, error){
-			_self.getBanState(profile_uid, success, error);
+			_self._getBanState(profile_uid, success, error);
 		};
 	}
 
 	//======================================================
-	//	@method			get_policy_list()
+	//	@method			_getPolicyList()
 	//	@usage			Get policy list
 	//							(method) success - Success Callback
 	//							(method) error - Error Callback
 	//======================================================
-	getPolicyList(success, error){
+	_getPolicyList(success, error){
 		// Set Callbacks
-		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
-		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
 		// Call API Request
-		this.call("users.get_policy_list", {
-			app_id: this.instance.application.app_id,
-			app_key: this.instance.application.app_key,
+		_self.instance.call("users.get_policy_list", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
 		}, function(data){
+			_self.policy.list = data.list;
 			_success(data);
 		}, function(error){
 			_error(error);
 		});
-
 	}
 
 	//======================================================
-	//	@method			get_policy_info()
+	//	@method			_getPolicyInfo()
 	//	@usage			Get policy info
 	//	@args				(double) policy_id - Policy ID
 	//							(method) success - Success Callback
 	//							(method) error - Error Callback
 	//======================================================
-	getPolicyInfo(policy_id, success, error){
+	_getPolicyInfo(policy_id, success, error){
 		// Set Callbacks
-		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
-		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
 		// Call API Request
-		this.call("users.get_policy_info", {
-			app_id: this.instance.application.app_id,
-			app_key: this.instance.application.app_key,
+		_self.instance.call("users.get_policy_info", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
 			pid: policy_id
 		}, function(data){
 			_success(data);
@@ -765,111 +1574,25 @@ class Ocugine_Users extends OcugineSDK{
 	}
 
 	//======================================================
-	//	@method			get_ban_state()
+	//	@method			_getBanState()
 	//	@usage			Get Ban State
 	//	@args				(double) profile_uid - Profile UID
 	//							(method) success - Success Callback
 	//							(method) error - Error Callback
 	//	@returns		none
 	//======================================================
-	getBanState(profile_uid, success, error){
+	_getBanState(profile_uid, success, error){
 
 	}
 
-	getChatRooms(){
 
-	}
-
-	getChatMessages(){
-
-	}
-
-	sendChatMessages(){
-
-	}
-
-	getDialogs(){
-
-	}
-
-	getMessages(){
-
-	}
-
-	sendMessage(){
-
-	}
-
-	getNotifications(){
-
-	}
-
-	getNotificationData(){
-
-	}
-
-	getUserData(){
-
-	}
-
-	findUser(){
-
-	}
-
-	getUserByUID(){
-
-	}
-
-	getGroupsList(){
-
-	}
-
-	getGroupData(){
-
-	}
-
-	setUserGroup(){
-
-	}
-
-	getUsersList(){
-
-	}
-
-	getAdvancedProfileFields(){
-
-	}
-
-	getSupportCategories(){
-
-	}
-
-	getSupportTopics(){
-
-	}
-
-	getSupportMessages(){
-
-	}
-
-	createSupportTopic(){
-
-	}
-
-	closeSupportTopic(){
-
-	}
-
-	sendReview(){
-
-	}
 
 }
 
 //======================================================
 //	Ocugine UI
 //======================================================
-class Ocugine_UI extends OcugineSDK{
+class Ocugine_UI{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
@@ -877,7 +1600,6 @@ class Ocugine_UI extends OcugineSDK{
 	//	@returns		none
 	//======================================================
 	constructor(parent){
-		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
 	}
 
@@ -892,29 +1614,25 @@ class Ocugine_UI extends OcugineSDK{
 	showOAuth(success, error){
 		// Set Callbacks
 		var _self = this;
-		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
-		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
 		// Get Link
-		if(_self.instance._isString(_self.instance.module("auth").access_token) && _self.instance.module("auth").access_token.length>0){
-			_success(); // Done
-		}else{
-			this.instance.module("auth").getLink("all", function(data){
-				let wind; wind = window.open(data.data.auth_url); // Window
-				let timer = setInterval(function() { // Interval for Checking
-					if(wind.closed) { // Window Closed
-						clearInterval(timer); // Clear Timer
-						_self.instance.module("auth").getToken(function(){
-							_success(); // Done
-						}, function(err){
-							_error(err);
-						});
-					}
-				}, 1000);
-			}, function(err){
-				_error(err); // Throw Error
-			});
-		}
+		this.instance.module("auth").getLink("all", function(data){
+			let wind; wind = window.open(data.auth_url); // Window
+			let timer = setInterval(function() { // Interval for Checking
+				if(wind.closed) { // Window Closed
+					clearInterval(timer); // Clear Timer
+					_self.instance.module("auth").getToken(function(){
+						_success(); // Done
+					}, function(err){
+						_error(err);
+					});
+				}
+			}, 1000);
+		}, function(err){
+			_error(err); // Throw Error
+		});
 	}
 
 	//======================================================
@@ -926,7 +1644,7 @@ class Ocugine_UI extends OcugineSDK{
 	showProfile(closed){
 		var _self = this;
 		let _closed = (this._isEmpty(closed) || !this._isFunction(closed))?function(){}:closed; // Success Callback
-		let wind; wind = window.open(_self.parent._getServerUrl()); // Window
+		let wind; wind = window.open(_self.instance._getServerUrl()+'profile/'); // Window
 
 
 		// Set timer
@@ -937,12 +1655,14 @@ class Ocugine_UI extends OcugineSDK{
 			}
 		}, 1000);
 	}
+
+
 }
 
 //======================================================
 //	Ocugine Utils
 //======================================================
-class Ocugine_Utils extends OcugineSDK{
+class Ocugine_Utils{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
@@ -950,23 +1670,23 @@ class Ocugine_Utils extends OcugineSDK{
 	//	@returns		none
 	//======================================================
 	constructor(parent){
-		super(); // Set Constructor
 		this.instance = parent; // Set Parent Object
 	}
 
 	//======================================================
 	//	@method			getAPIState()
 	//	@usage			Get Current API State
-	//	@args			(function) success - Done Callback
-	//					(function) error - Error Callback
+	//	@args				(function) success - Done Callback
+	//							(function) error - Error Callback
 	//======================================================
 	getAPIState(success, error){
 		// Set Callbacks
-		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
-		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
 		// Call API Request
-		this.call("state.get_state", {}, function(data){
+		_self.instance.call("state.get_state", {}, function(data){
 			_success(data);
 		}, function(error){
 			_error(error);
@@ -981,11 +1701,12 @@ class Ocugine_Utils extends OcugineSDK{
 	//======================================================
 	getAPIInfo(success, error){
 		// Set Callbacks
-		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
-		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
 		// Call API Request
-		this.call("state.init", {}, function(data){
+		_self.instance.call("state.init", {}, function(data){
 			_success(data);
 		}, function(error){
 			_error(error);
@@ -995,19 +1716,20 @@ class Ocugine_Utils extends OcugineSDK{
 	//======================================================
 	//	@method			testAPPConnection()
 	//	@usage			Test Application Connection
-	//	@args			(function) success - Done Callback
-	//					(function) error - Error Callback
+	//	@args				(function) success - Done Callback
+	//							(function) error - Error Callback
 	//======================================================
 	testAPPConnection(success, error){
 		// Set Callbacks
-		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
-		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
 		var _self = this; // Link
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
 
 		// Call API Request
-		this.call("connection.init", {
-			app_id: this.instance.application.app_id,
-			app_key: this.instance.application.app_key
+		_self.instance.call("connection.init", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key
 		}, function(data){
 			_success(data);
 		}, function(error){
@@ -1024,13 +1746,13 @@ class Ocugine_Utils extends OcugineSDK{
 	get_settings(success, error){
 		var _self = this;
 		// Set Callbacks
-		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
-		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
 		// Call API Request
-		this.call("api_settings.get_settings", {
-			app_id: this.instance.application.app_id,
-			app_key: this.instance.application.app_key,
+		_self.instance.call("api_settings.get_settings", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
 		}, function(data){
 			_success(data);
 		}, function(error){
@@ -1045,14 +1767,13 @@ class Ocugine_Utils extends OcugineSDK{
 const OcugineMapping = {
 	"auth": Ocugine_Auth, // Ocugine Auth
 	"analytics": Ocugine_Analytics, // Analytics
-	"game": Ocugine_Gaming, // Gaming Services
+	"gaming": Ocugine_Gaming, // Gaming Services
 	"monetization": Ocugine_Monetization, // Monetization
 	"notify": Ocugine_Notifications, // Notifications
 	"marketing": Ocugine_Marketing, // Marketing
 	"ads": Ocugine_Ads, // Advertising
 	"backend": Ocugine_Backend, // Backend
 	"reports": Ocugine_Reports, // Reports
-	"perfomance": Ocugine_Perfomance, // Perfomance
 	"localization": Ocugine_Localization, // Localization
 	"users": Ocugine_Users, // Ocugine Users
 	"ui": Ocugine_UI, // Ocugine UI
