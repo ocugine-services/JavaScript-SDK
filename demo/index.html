@@ -16,6 +16,7 @@
 		<!-- STYLES -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="ocugine.css?v=91">
 		<link rel="stylesheet" href="app.css">
 		<!-- STYLES -->
 	</head>
@@ -25,42 +26,132 @@
 			<div style="clear: both; height: 20px;"></div>
 			<div class="jumbotron" style="padding: 2rem 2rem;">
 			  <h1 class="display-4">Welcome to the Ocugine!</h1>
-			  <p class="lead">This is a simple example of usage Ocugine JavaScript SDK. Just select the desired object and method to display a sample code and run it as a test.</p>
+			  <p class="lead">Here you can try out some of the features of our platform before you start using Ocugine JavaScript SDK in your project.<br/><b>Current SDK Version:</b> <span class="badge badge-info">0.4.0a</span></p>
+				<a href="https://help.ocugine.pro/en/ocugine-services/sdk-documentation/javascript-sdk" target="_blank" class="btn btn-info">Documentation</a>
 			</div>
 		</div>
 		<!-- HELLO WORLD -->
 
+		<!-- SETUP MODULE -->
+		<div id="app_setup" class="container animated fadeIn">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">Application Setup</h5>
+							<p class="card-text">Before we starts, let's set up your application. You can find these options in the <a href="https://cp.ocugine.pro/dashboard/settings/" target="_blank">dashboard</a>:</p>
+							<div class="form-group">
+								<input id="app_id" class="form-control" type="number" placeholder="Application ID (Project ID)" value="" />
+							</div>
+							<div class="form-group">
+								<input id="app_key" class="form-control" type="text" placeholder="Application Key (Client Key)" value="" />
+							</div>
+							<p class="card-text"><a href="#!" id="setup_sdk" class="btn btn-primary btn-rounded">Initialize Application</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- SETUP MODULE -->
+
+		<!-- AUTH MODULE -->
+		<div id="auth" class="container animated fadeIn" style="display: none;">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">Player Authentication</h5>
+							<p class="card-text">Now you can authenticate your player in the game:</p>
+							<p class="card-text"><a href="#!" id="auth_player" class="btn btn-primary btn-rounded">Login</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- AUTH MODULE -->
+
 		<!-- CODE BLOCK -->
-		<div class="container">
+		<div id="app" class="container animated fadeIn" style="display: none;">
 			<div class="row">
 				<div class="col-md-4">
 					<div class="card">
 					  <div class="card-body">
-					    <h5 class="card-title">Ocugine Objects</h5>
-					    <p class="card-text">Choose an object of Ocugine JS SDK for testing.</p>
-							<select class="form-control" name="objects">
+					    <h5 class="card-title">Profile</h5>
+					    <p class="card-text">Here you can see your profile information:</p>
+							<div class="alert alert-danger" id="profile_error" style="display: none;"></div>
+							<div class="media">
+								<img id="profile_avatar" class="mr-3" src="" alt="Loading..." style="max-width: 64px; border-radius: 100%;" />
+								<div class="media-body">
+									<h5 class="mt-0" id="profile_identity"></h5>
+									<p class="mt-0 mb-0"><b>UID:</b> <span id="profile_uid"></span></p>
+									<p class="mt-0 mb-0"><b>Email:</b> <span id="profile_email"></span></p>
+									<hr/>
+									<h5 class="mt-0">Custom Fields:</h5>
+									<div id="advanced_fields">
 
-							</select>
+									</div>
+								</div>
+							</div>
+							<hr/>
+							<p class="card-text mt-2"><a href="https://cp.ocugine.pro/profile/" class="btn btn-primary btn-block" target="_blank">Edit Profile</a></p>
 					  </div>
 					</div>
 
 					<div style="clear: both; height: 20px;"></div>
 					<div class="card">
 					  <div class="card-body">
-					    <h5 class="card-title">Ocugine Methods</h5>
-					    <p class="card-text">Choose a method of Ocugine JS SDK for testing.</p>
-							<select class="form-control" name="methods">
-
-							</select>
+					    <h5 class="card-title">Achievements</h5>
+					    <p class="card-text">Here you can see the player achievements list:</p>
+							<div class="alert alert-danger" id="achivs_error" style="display: none;"></div>
+							<div id="achivs"></div>
 					  </div>
 					</div>
 				</div>
 				<div class="col-md-8">
 					<div class="card">
 					  <div class="card-body">
-					    <h5 class="card-title">Usage Results</h5>
-					    <p class="card-text">Ocugine Usage Results</p>
-
+					    <h5 class="card-title">SDK Objects</h5>
+					    <p class="card-text">The list of the Ocugine JavaScript Objects:</p>
+							<ul>
+								<li><b>OcugineSDK</b> - General SDK Class;</li>
+								<li><b>Ocugine_Auth</b> - OAuth Authentication Class;</li>
+								<li><b>Ocugine_Analytics</b> - Analytics Class (for example: events and conversions);</li>
+								<li><b>Ocugine_Gaming</b> - Game Services Class (for example: achievements);</li>
+								<ul>
+									<li><b>leaderboards</b> - Leaderboards Object;</li>
+									<li><b>achievements</b> - Achievements Object;</li>
+									<li><b>missions</b> - Missions Object;</li>
+								</ul>
+								<li><b>Ocugine_Monetization</b> - Monetization Class;</li>
+								<li><b>Ocugine_Notifications</b> - In-Game Notifications class;</li>
+								<li><b>Ocugine_Marketing</b> - Marketing Class;</li>
+								<li><b>Ocugine_Ads</b> - Advertising Class;</li>
+								<li><b>Ocugine_Backend</b> - Cloud Management Class;</li>
+								<ul>
+									<li><b>storage</b> - Storage Object;</li>
+									<li><b>database</b> - Database Object;</li>
+									<li><b>multiplayer</b> - Multiplayer Object;</li>
+									<li><b>liveconfs</b> - Live Configs Object;</li>
+									<li><b>backend</b> - Backend Builder Object;</li>
+								</ul>
+								<li><b>Ocugine_Reports</b> - Errors and Performance Reporting Class;</li>
+								<ul>
+									<li><b>errors</b> - Errors Reporting Object;</li>
+									<li><b>performance</b> - Performance Reporting Object;</li>
+								</ul>
+								<li><b>Ocugine_Localization</b> - Localization Class;</li>
+								<li><b>Ocugine_Users</b> - Ocugine Users Class;</li>
+								<ul>
+									<li><b>policy</b> - Policy Management Object;</li>
+									<li><b>users</b> - Users Management Object;</li>
+									<li><b>support</b> - Support System Object;</li>
+									<li><b>chats</b> - Chats Object;</li>
+									<li><b>dialogs</b> - Personal Messages Object;</li>
+									<li><b>reviews</b> - Reviews Object;</li>
+								</ul>
+								<li><b>Ocugine_UI</b> - Ocugine UI Modules Class (Requires jQuery);</li>
+								<li><b>Ocugine_Utils</b> - Ocugine Utils Class</li>
+							</ul>
 					  </div>
 					</div>
 				</div>
@@ -70,11 +161,10 @@
 
 		<!-- SCRIPTS -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" crossorigin="anonymous"></script>
-		<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/highlight.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-		<script type="text/javascript" src="ocugine.js"></script>
-		<script type="text/javascript" src="app.js?v=91"></script>
+		<script type="text/javascript" src="ocugine.js" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="app.js?v=91" crossorigin="anonymous"></script>
 		<!-- SCRIPTS -->
 	</body>
 </html>

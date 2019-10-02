@@ -2,10 +2,10 @@
 //	Ocugine JavaScript SDK
 //	Sofware Development Kit developed specially for
 //  Ocugine Services. With this library you can
-//  use all features of Ocugine Services on JS
+//  use all features of Ocugine Services using JS
 //
 //	@name           Ocugine SDK
-//  @developer      CodeBits Interactive
+//  @developer      Ocugine Platform
 //  @version        0.4.0a
 //  @build          401
 //  @url            https://ocugine.pro/
@@ -50,29 +50,44 @@ class OcugineSDK{
 	//======================================================
 	constructor(app_settings, sdk_settings, debug){
 		// Check Variables Values
-		if(this._isEmpty(app_settings) || this._isEmpty(sdk_settings)){
+		var _self = this;
+		if(_self._isEmpty(app_settings) || _self._isEmpty(sdk_settings)){
 			throw "Failed to initialize Ocugine SDK. Please, check SDK Settings.";
 		}
 
 		// Set Base Settings
-		this.platform = "web";									// SDK Platform
 		this.application = app_settings; 				// Set Application Settings
 		this.settings = sdk_settings; 					// Set SDK settings
 		this.debug = (debug)?true:false;				// Set Debug Params
+		this.platform = (this._isEmpty(this.settings.platform) || !this._isString(this.settings.platform))?"web":this.settings.platform;  // SDK Platform
 
 		// Set Another SDK Params
-		this.is_https = true;							// HTTP/HTTPs Mode
-		this.server_url = "cp.ocugine.pro";				// API Server URL
-		this.server_gateway = "api";					// API Server Gateway
+		this.is_https = true;										// HTTP/HTTPs Mode
+		this.server_url = "cp.ocugine.pro";			// API Server URL
+		this.server_gateway = "api";						// API Server Gateway
 
 		// Set Utils
 		this.modules = {};								// Modules
 
 		// Send First Open flag and Session Start
-		if(this.settings.auto_analytics){
-			this.module("Analytics").sendUserFlag("first_open");
-			this.module("Analytics").sendUserFlag("session_update");
-			this.module("Analytics").updateRetention();
+		if(!this._isEmpty(this.settings.auto_analytics) && this._isBoolean(this.settings.auto_analytics) && this.settings.auto_analytics){
+			_self.module("Analytics").sendUserFlag("first_open");
+			_self.module("Analytics").sendUserFlag("session_update");
+			_self.module("Analytics").updateRetention();
+		}
+
+		// Auto Reports
+		if(!this._isEmpty(this.settings.auto_reports) && this._isBoolean(this.settings.auto_reports) && this.settings.auto_reports){
+			// Errors Handling
+			window.onerror = function(msg, url, lineNo, columnNo, error) {
+				var _name = 'JS SDK: Auto Report';
+				var _body = msg;
+				var _code = 'line: '+lineNo;
+				var _critical = true;
+			  _self.module("reports").errors.sendReport(_name, _body, _code, _critical, function(){
+				}, function(){
+				});
+			};
 		}
 	}
 
@@ -111,23 +126,15 @@ class OcugineSDK{
 		// XHR Done
 		xhr.onreadystatechange = function() {	// Then XHR Status Changed
 			if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) { // Complete
-				try{ // Trying to parse data
-					var _resp = JSON.parse(xhr.responseText); // Parse JSON
-					if(_resp.complete){ // Complete Status
-						if(_self.debug) console.log(_resp.data);
-						_success(_resp.data); // Send Success Callback
-					}else{ // Error Status
-						if(_self.debug) console.log(_resp.message);
-						_error({ // Call Error
-							message: _resp.message,
-							code: (_self._isEmpty(_resp.code) || !_self._isNumber(_resp.code))?-1:_resp.code
-						});
-					}
-				}catch{ // Error
-					if(_self.debug) console.log("Failed to decode server response. Please, try again later or contact us. Response Data: " + xhr.responseText);
-					_error({ // Call Error _
-						message: "Failed to decode server response. Please, try again later or contact us.",
-						code: 98
+				var _resp = JSON.parse(xhr.responseText); // Parse JSON
+				if(_resp.complete){ // Complete Status
+					if(_self.debug) console.log(_resp.data);
+					_success(_resp.data); // Send Success Callback
+				}else{ // Error Status
+					if(_self.debug) console.log(_resp.message);
+					_error({ // Call Error
+						message: _resp.message,
+						code: (_self._isEmpty(_resp.code) || !_self._isNumber(_resp.code))?-1:_resp.code
 					});
 				}
 			}
@@ -319,8 +326,8 @@ class OcugineSDK{
 	//	@returns		(bool) Variable null/undefined state
 	//======================================================
 	_isEmpty(variable){
-		//return (variable === undefined || variable === null)?true:false;
-		return false;
+		return (variable === undefined || variable === null)?true:false;
+		//return false;
 	}
 }
 
@@ -396,6 +403,9 @@ class Ocugine_Auth{
 			localStorage.setItem("auth_key", "");
 			_success(data);
 		}, function(error){
+			_self.access_token = "";
+			localStorage.setItem("access_token", "");
+			localStorage.setItem("auth_key", "");
 			console.log(error);
 			_error(error);
 		});
@@ -412,7 +422,7 @@ class Ocugine_Auth{
 		// Set Callbacks
 		let _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
-		let _error = (_self.instance._isEmpty(error) || !thi_self.instances._isFunction(error))?function(){}:error; // Error Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
 		// Request Data
 		let _rd = { // Request Data
@@ -425,6 +435,9 @@ class Ocugine_Auth{
 			_self.access_token = data.access_token;
 			_success(data);
 		}, function(error){
+			_self.access_token = "";
+			localStorage.setItem("access_token", "");
+			localStorage.setItem("auth_key", "");
 			console.log(error);
 			_error(error);
 		});
@@ -921,6 +934,7 @@ class Ocugine_Gaming{
 				uid: uid,
 				access_token: localStorage.getItem('access_token')
 			}, function(data){
+				if(_self.instance.settings.show_ui) _self.instance.module("UI").showAchievement(uid);
 				_success(data);
 			}, function(error){
 				_error(error);
@@ -1038,6 +1052,7 @@ class Ocugine_Gaming{
 				access_token: localStorage.getItem('access_token'),
 				uid: uid
 			}, function(data){
+				if(_self.instance.settings.show_ui) _self.instance.module("UI").showNewMission(uid);
 				_success(data);
 			}, function(error){
 				_error(error);
@@ -1116,6 +1131,7 @@ class Ocugine_Gaming{
 
 //======================================================
 //	Ocugine Monetization
+//	(In Development)
 //======================================================
 class Ocugine_Monetization{
 	//======================================================
@@ -1162,7 +1178,7 @@ class Ocugine_Notifications{
 		_self.instance.call("gaming.get_notifications", {
 			app_id: _self.instance.application.app_id,
 			app_key: _self.instance.application.app_key,
-			platform: _self.instance.platform,
+			platform: 8,
 			access_token: localStorage.getItem('access_token')
 		}, function(data){
 			_self.leaderboards.list = data.list;
@@ -1181,7 +1197,21 @@ class Ocugine_Notifications{
 	//	@returns		none
 	//======================================================
 	getData(uid, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
+		// Call API Request
+		_self.instance.call("gaming.get_notification_data", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			uid: uid
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
 	};
 
 	//======================================================
@@ -1193,12 +1223,28 @@ class Ocugine_Notifications{
 	//	@returns		none
 	//======================================================
 	readNotification(uid, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
+		// Call API Request
+		_self.instance.call("gaming.read_notification", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			uid: uid,
+			access_token: localStorage.getItem('access_token')
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
 	};
 }
 
 //======================================================
 //	Ocugine Marketing
+//	(In Development)
 //======================================================
 class Ocugine_Marketing{
 	//======================================================
@@ -1220,6 +1266,7 @@ class Ocugine_Marketing{
 
 //======================================================
 //	Ocugine Ads
+//	(In Development)
 //======================================================
 class Ocugine_Ads{
 	//======================================================
@@ -1241,12 +1288,13 @@ class Ocugine_Ads{
 
 //======================================================
 //	Ocugine Backend
+//	(Beta Version)
 //======================================================
 class Ocugine_Backend{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
-	//	@args			none
+	//	@args				none
 	//	@returns		none
 	//======================================================
 	constructor(parent){
@@ -1268,7 +1316,13 @@ class Ocugine_Backend{
 		this.storage.getContent = function(content_id, success, error){
 			_self._getContent(content_id, success, error);
 		};
-
+		this.liveconfs.list = null;
+		this.liveconfs.getAllConfigs = function(success, error){
+			_self._getAllConfigs(success, error);
+		};
+		this.liveconfs.getConfig = function(uid, success, error){
+			_self._getConfig(uid, success, error);
+		};
 	}
 
 	//======================================================
@@ -1319,7 +1373,53 @@ class Ocugine_Backend{
 		});
 	}
 
+	//======================================================
+	//	@method			_getAllConfigs()
+	//	@usage			Get all live configs
+	//	@args				(method) success - Success Callback
+	//							(method) error - Error Callback
+	//======================================================
+	_getAllConfigs(success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
 
+		_self.instance.call("cloud.get_all_configs", {
+			app_id: this.instance.application.app_id,
+			app_key: this.instance.application.app_key
+		}, function(data){
+			_self.liveconfs.list = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getConfig()
+	//	@usage			Get Live Configuration by UID
+	//	@args				(double) content_id - Content ID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//======================================================
+	_getConfig(uid, success, error){
+		// Set Callbacks
+		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
+
+		_self.instance.call("cloud.get_config", {
+			app_id: this.instance.application.app_id,
+			app_key: this.instance.application.app_key,
+			uid: uid
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	/* TODO: Other Backend Methods */
 }
 
 //======================================================
@@ -1341,8 +1441,126 @@ class Ocugine_Reports{
 		this.performance = {};
 
 		// Create Methods Wrappers
+		this.errors.sendReport = function(name, body, code, critical, success, error){
+			_self._sendErrorReport(name, body, code, critical, success, error);
+		};
+		this.errors.getReport = function(uid, success, error){
+			_self._sendErrorReport(uid, success, error);
+		}
+		this.performance.sendReport = function(name, body, success, error){
+			_self._sendPerformanceReport(name,body,success,error);
+		};
+		this.performance.getReport = function(uid, success, error){
+			_self._getPerformanceReport(uid, success, error);
+		};
 	}
 
+	//======================================================
+	//	@method			_sendErrorReport()
+	//	@usage			Send Error Report
+	//	@args				(string) name - Report Name
+	//							(string) body - Report Body
+	//							(string) code - Short Error Code
+	//							(bool) critical - Critical State
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//======================================================
+	_sendErrorReport(name, body, code, critical, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+		let _critical = (!critical)?0:1;
+
+		_self.instance.call("reports.send_error", {
+			app_id: this.instance.application.app_id,
+			app_key: this.instance.application.app_key,
+			name: name,
+			body: body,
+			code: code,
+			critical: _critical,
+			platform: _self.instance.platform
+		}, function(data){
+			if(_self.instance.settings.show_ui) _self.instance.module("UI").showError("Application Error", body);
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getErrorReport()
+	//	@usage			Get Error Report
+	//	@args				(double) uid - Report ID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//======================================================
+	_getErrorReport(uid, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		_self.instance.call("reports.get_error", {
+			app_id: this.instance.application.app_id,
+			app_key: this.instance.application.app_key,
+			uid: uid
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_sendPerformanceReport()
+	//	@usage			Send Performance Report
+	//	@args				(string) name - Report Name
+	//							(string) body - Report Body
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//======================================================
+	_sendPerformanceReport(name, body, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		_self.instance.call("reports.send_performance", {
+			app_id: this.instance.application.app_id,
+			app_key: this.instance.application.app_key,
+			name: name,
+			body: body
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getPerformanceReport()
+	//	@usage			Get Performance Report
+	//	@args				(double) uid - Report ID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//======================================================
+	_getPerformanceReport(uid, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		_self.instance.call("reports.get_performance", {
+			app_id: this.instance.application.app_id,
+			app_key: this.instance.application.app_key,
+			uid: uid
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
 }
 
 //======================================================
@@ -1488,7 +1706,6 @@ class Ocugine_Localization{
 	}
 }
 
-
 //======================================================
 //	Ocugine Users
 //======================================================
@@ -1506,7 +1723,7 @@ class Ocugine_Users{
 
 		// Objects
 		this.policy = {};
-		this.user = {};
+		this.users = {};
 		this.support = {};
 		this.chats = {};
 		this.dialogs = {};
@@ -1520,9 +1737,84 @@ class Ocugine_Users{
 		this.policy.getInfo = function(policy_id, success, error){
 			_self._getPolicyInfo(policy_id, success, error);
 		};
-		this.user.currentUser = null;
-		this.user.getBanState = function(profile_uid, success, error){
+		this.users.currentUser = null;
+		this.users.list = null;
+		this.users.groups = null;
+		this.users.fields = null;
+		this.users.getBanState = function(profile_uid, success, error){
 			_self._getBanState(profile_uid, success, error);
+		};
+		this.users.getCurrentUser = function(success, error){
+			_self._getCurrentUser(success, error);
+		};
+		this.users.getByUID = function(uid, success, error){
+			_self._getUserByUID(uid, success, error);
+		};
+		this.users.getList = function(page = 1, success, error){
+			_self._getUsersList(page, success, error);
+		};
+		this.users.findUser = function(search = "", page = 1, success, error){
+			_self._findUser(search,page,success,error);
+		};
+		this.users.getGroups = function(success, error){
+			_self._getGroupsList(success, error);
+		};
+		this.users.getGroup = function(uid, success, error){
+			_self._getGroupByUID(uid, success, error);
+		};
+		this.users.setUserGroup = function(profile_uid, group_id, success, error){
+			_self._setGroup(profile_uid, group_id, success, error);
+		};
+		this.users.getCustomFields = function(search = "", page = 1, success, error){
+			_self._getCustomFields(search, page, success, error);
+		};
+		this.users.setCustomField = function(profile_uid, field_id, value, success, error){
+			_self._setCustomField(profile_uid, field_id, value, success, error);
+		};
+		this.support.categories = null;
+		this.support.current_category = null;
+		this.support.topics = null;
+		this.support.current_topic = null;
+		this.support.messages = null;
+		this.support.getCategories = function(success, error){
+			_self._getCategories(success, error);
+		};
+		this.support.getTopics = function(category_id, search = "", page = 1, success, error){
+			_self._getTopics(category_id, search, page, success, error);
+		};
+		this.support.getMessages = function(topic_id, search = "", page = 1, success, error){
+			_self._getSupportMessages(topic_id, search, page, success, error);
+		};
+		this.support.createTopic = function(category_id, title, body, success, error){
+			_self._createTopic(category_id, title, body, success, error);
+		};
+		this.support.updateTopic = function(topic_id, category_id, title, body, success, error){
+			_self._updateTopic(topic_id, category_id, title, body, success, error);
+		};
+		this.support.closeTopic = function(topic_id, success, error){
+			_self._closeTopic(topic_id, success, error);
+		};
+		this.support.sendMessage = function(topic_id, message, success, error){
+			_self._sendSupportMessage(topic_id, message, success, error);
+		};
+		this.chats.rooms = null;
+		this.chats.current_room = null;
+		this.chats.messages = null;
+		this.chats.getRooms = function(success, error){
+			_self._getRooms(success, error);
+		};
+		this.chats.getMessages = function(room_id, success, error){
+			_self._getChatMessages(room_id, success, error);
+		};
+		this.chats.sendMessage = function(room_id, message, success, error){
+			_self._sendChatMessage(room_id, message, success, error);
+		};
+		this.reviews.list = null;
+		this.reviews.getList = function(search = "", page = 1, success, error){
+			_self._getReviews(search, page, success, error);
+		};
+		this.reviews.sendReview = function(stars, message, success, error){
+			_self._sendReview(stars, message, success, error);
 		};
 	}
 
@@ -1534,6 +1826,7 @@ class Ocugine_Users{
 	//======================================================
 	_getPolicyList(success, error){
 		// Set Callbacks
+		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
@@ -1558,6 +1851,7 @@ class Ocugine_Users{
 	//======================================================
 	_getPolicyInfo(policy_id, success, error){
 		// Set Callbacks
+		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
@@ -1582,15 +1876,623 @@ class Ocugine_Users{
 	//	@returns		none
 	//======================================================
 	_getBanState(profile_uid, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
+		// Call API Request
+		_self.instance.call("users.get_ban_state", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			profile_uid: profile_uid
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
 	}
 
+	//======================================================
+	//	@method			_getCurrentUser()
+	//	@usage			Get Current User Data by Access Token
+	//	@args				(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getCurrentUser(success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
+		// Call API Request
+		_self.instance.call("users.get_user_data", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			access_token: localStorage.getItem('access_token')
+		}, function(data){
+			_self.users.currentUser = data;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
 
+	//======================================================
+	//	@method			_getUserByUID()
+	//	@usage			Get User by UID
+	//	@args				(double) uid - Profile UID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getUserByUID(uid, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.get_user_by_id", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			profile_uid: profile_uid
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getUsersList()
+	//	@usage			Get Users List
+	//	@args				(double) page - Pagination Index
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getUsersList(page, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.get_users_list", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			page: page
+		}, function(data){
+			_self.users.list = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_findUser()
+	//	@usage			Find User by Name
+	//	@args				(string) search - Search Query
+	//							(double) page - Pagination Index
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_findUser(search, page, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.find_user", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			page: page,
+			search: search
+		}, function(data){
+			_self.users.list = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getGroupsList()
+	//	@usage			Get Users Groups for this application
+	//	@args				(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getGroupsList(success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.get_group_list", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key
+		}, function(data){
+			_self.users.groups = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getGroupByUID()
+	//	@usage			Get Group by UID
+	//	@args				(double) uid - Group ID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getGroupByUID(uid, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.get_group_data", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			group_id: uid
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_setGroup()
+	//	@usage			Set Group by Group UID for Profile UID
+	//	@args				(double) profile_uid - Profile ID
+	//							(double) group_id - Group ID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_setGroup(profile_uid, group_id, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.set_group", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			profile_uid: profile_uid,
+			group_id: group_id
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getCustomFields()
+	//	@usage			Get Users Custom Fields for this app
+	//	@args				(string) search - Search Query
+	//							(page) page - Pagination Index
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getCustomFields(search, page, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.get_fields", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			search: search,
+			page: page
+		}, function(data){
+			_self.users.fields = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_setCustomField()
+	//	@usage			Set Custom Field value for user
+	//	@args				(profile_uid) - Profile UID
+	//							(field_id) - Field UID in the system
+	//							(value) - Field Value
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_setCustomField(profile_uid, field_id, value, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.set_field", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			profile_uid: profile_uid,
+			field_id: field_id,
+			value: value
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getCategories()
+	//	@usage			Get Support Categories
+	//	@args				(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getCategories(success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.get_support_categories", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key
+		}, function(data){
+			_self.support.categories = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getTopics()
+	//	@usage			Get Topics List by category UID
+	//	@args				(double) category_id - Category UID
+	//							(string) search - Search Query
+	//							(page) page - Pagination Index
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getTopics(category_id, search, page, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.get_support_topics", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			category_uid: category_id,
+			search: search,
+			page: page
+		}, function(data){
+			_self.support.current_category = category_id;
+			_self.support.topics = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getSupportMessages()
+	//	@usage			Get Topic Messages List
+	//	@args				(double) topic_id - Topic ID
+	//							(string) search - Search Query
+	//							(page) page - Pagination Index
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getSupportMessages(topic_id, search, page, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.get_support_messages", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			topic_uid: topic_id,
+			search: search,
+			page: page
+		}, function(data){
+			_self.support.current_topic = topic_id;
+			_self.support.messages = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_createTopic()
+	//	@usage			Create Support Topic
+	//	@args				(double) category_id - Category UID
+	//							(string) title - Topic Title
+	//							(string) body - Topic Body
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_createTopic(category_id, title, body, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.create_topic", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			category_uid: category_id,
+			name: title,
+			body: body,
+			access_token: localStorage.getItem('access_token')
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_updateTopic()
+	//	@usage			Update Support Topic
+	//	@args				(double) topic_id - Topic ID
+	//							(double) category_id - Category UID
+	//							(string) title - Topic Title
+	//							(string) body - Topic Body
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_updateTopic(topic_id, category_id, title, body, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.update_topic", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			topic_uid: topic_id,
+			category_uid: category_id,
+			name: title,
+			body: body,
+			access_token: localStorage.getItem('access_token')
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_closeTopic()
+	//	@usage			Close Support Topic
+	//	@args				(double) topic_id - Topic ID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_closeTopic(topic_id, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.close_topic", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			topic_uid: topic_id,
+			access_token: localStorage.getItem('access_token')
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_sendSupportMessage()
+	//	@usage			Send message to the topic
+	//	@args				(double) topic_id - Topic ID
+	//							(string) message - message text
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_sendSupportMessage(topic_id, message, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.send_support_message", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			topic_uid: topic_id,
+			message: message,
+			access_token: localStorage.getItem('access_token')
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getRooms()
+	//	@usage			Get Chat Rooms
+	//	@args				(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getRooms(success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.get_available_rooms", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key
+		}, function(data){
+			_self.chats.rooms = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getChatMessages()
+	//	@usage			Get Chat Messages by Room UID
+	//	@args				(double) room_id - Room UID
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getChatMessages(room_id, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.get_chat_messages", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			room_id: room_id
+		}, function(data){
+			_self.chats.current_room = room_id;
+			_self.chats.messages = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_sendChatMessage()
+	//	@usage			Send message to the Chat Room
+	//	@args				(double) room_id - Room UID
+	//							(string) message - Message Text
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_sendChatMessage(room_id, message, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.send_cmessage", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			room_id: room_id,
+			message: message,
+			access_token: localStorage.getItem('access_token')
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_getReviews()
+	//	@usage			Get Users Reviews for this application
+	//	@args				(string) search - Search Query
+	//							(page) page - Pagination Index
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_getReviews(search, page, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.get_reviews", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			search: search,
+			page: page
+		}, function(data){
+			_self.reviews.list = data.list;
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
+
+	//======================================================
+	//	@method			_sendReview()
+	//	@usage			Send Review to this app
+	//	@args				(int) stars - Stars (rating) from 1 to 5
+	//							(string) message - Review Text
+	//							(method) success - Success Callback
+	//							(method) error - Error Callback
+	//	@returns		none
+	//======================================================
+	_sendReview(stars, message, success, error){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Call API Request
+		_self.instance.call("users.send_review", {
+			app_id: _self.instance.application.app_id,
+			app_key: _self.instance.application.app_key,
+			stars: stars,
+			message: message,
+			access_token: localStorage.getItem('access_token')
+		}, function(data){
+			_success(data);
+		}, function(error){
+			_error(error);
+		});
+	}
 }
 
 //======================================================
 //	Ocugine UI
+//======================================================
+//	WARNING! Ocugine UI needs jQuery Library
 //======================================================
 class Ocugine_UI{
 	//======================================================
@@ -1618,45 +2520,275 @@ class Ocugine_UI{
 		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
 
 		// Get Link
-		this.instance.module("auth").getLink("all", function(data){
-			let wind; wind = window.open(data.auth_url); // Window
-			let timer = setInterval(function() { // Interval for Checking
-				if(wind.closed) { // Window Closed
-					clearInterval(timer); // Clear Timer
-					_self.instance.module("auth").getToken(function(){
-						_success(); // Done
-					}, function(err){
-						_error(err);
-					});
-				}
-			}, 1000);
-		}, function(err){
-			_error(err); // Throw Error
+		if(this.instance.module("auth").access_token==""){
+			this.instance.module("auth").getLink("all", function(data){
+				let wind; wind = window.open(data.auth_url); // Window
+				let timer = setInterval(function() { // Interval for Checking
+					if(wind.closed) { // Window Closed
+						clearInterval(timer); // Clear Timer
+						_self.instance.module("auth").getToken(function(){
+							_success(); // Done
+						}, function(err){
+							_error(err);
+						});
+					}
+				}, 1000);
+			}, function(err){
+				_error(err); // Throw Error
+			});
+		}else{
+			_self.instance.module("auth").getGrants(function(){
+				_success(); // Done
+			}, function(err){
+				_self.showOAuth(_success, _error);
+			});
+		}
+	}
+
+	//======================================================
+	//	@method			openProfileUI()
+	//	@usage			Show Profile Page UI
+	//	@args				(method) closed - Closed Callback
+	//	@returns		none
+	//======================================================
+	openProfileUI(closed){
+		var _self = this;
+		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
+
+		/* TODO: Profile UI */
+	}
+
+	//======================================================
+	//	@method			openSupportUI()
+	//	@usage			Show Support UI
+	//	@args				(method) closed - Closed Callback
+	//	@returns		none
+	//======================================================
+	openSupportUI(closed){
+		var _self = this;
+		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
+
+		/* TODO: Support UI */
+	}
+
+	//======================================================
+	//	@method			openChatUI()
+	//	@usage			Show Chat UI
+	//	@args				(method) closed - Closed Callback
+	//	@returns		none
+	//======================================================
+	openChatUI(closed){
+		var _self = this;
+		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
+
+		/* TODO: Chat UI */
+	}
+
+	//======================================================
+	//	@method			openReviewsUI()
+	//	@usage			Show Reviews UI
+	//	@args				(method) closed - Closed Callback
+	//	@returns		none
+	//======================================================
+	openReviewsUI(closed){
+		var _self = this;
+		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
+
+		/* TODO: Reviews UI */
+	}
+
+	//======================================================
+	//	@method			openAchievementsUI()
+	//	@usage			Show Achievements UI
+	//	@args				(method) closed - Closed Callback
+	//	@returns		none
+	//======================================================
+	openAchievementsUI(closed){
+		var _self = this;
+		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
+
+		/* TODO: Achievements UI */
+	}
+
+	//======================================================
+	//	@method			openMissionsUI()
+	//	@usage			Show Missions UI
+	//	@args				(method) closed - Closed Callback
+	//	@returns		none
+	//======================================================
+	openMissionsUI(closed){
+		var _self = this;
+		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
+
+		/* TODO: Missions UI */
+	}
+
+	//======================================================
+	//	@method			openLeaderboardsUI()
+	//	@usage			Show Leaderboards UI
+	//	@args				(method) closed - Closed Callback
+	//	@returns		none
+	//======================================================
+	openLeaderboardsUI(closed){
+		var _self = this;
+		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
+
+		/* TODO: Leaderboards UI */
+	}
+
+	//======================================================
+	//	@method			openNotificationsUI()
+	//	@usage			Show Notifications UI
+	//	@args				(method) closed - Closed Callback
+	//	@returns		none
+	//======================================================
+	openNotificationsUI(closed){
+		var _self = this;
+		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
+
+		/* TODO: Notifications UI */
+	}
+
+	//======================================================
+	//	@method			showError()
+	//	@usage			Show Error Notification
+	//	@args				(string) title - Title
+	//							(string) body - Body
+	//							(string) postion - (top-left, top-right, bottom-left, bottom-right)
+	//							(float) timeout - timeout in ms
+	//							(method) closed - Closed Callback
+	//	@returns		none
+	//======================================================
+	showError(title, body, position, timeout, closed){
+		var _self = this;
+		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
+		let _position = (_self.instance._isEmpty(position))?"bottom-left":position;
+		if(!_self.instance._isString(_position) || (_position!='top-left' && _position!='top-right' && _position!='bottom-left' && _position!='bottom-right')){
+			throw "Failed to show error toast. The position argument is wrong.";
+		}
+		let _timeout = (_self.instance._isEmpty(timeout) || !_self.instance._isNumber(timeout))?5000:timeout;
+
+		// Generate Container
+		var _cont = '<div id="ocugine-error" class="ocugine-toast '+_position+' default-font animated fadeIn"><div class="inner"><div class="toast-icon error"><i class="material-icons">priority_high</i></div>'+
+								'<div class="toast-media"><h2 class="toast-headline">'+title+'</h2><p class="toast-body">'+body+'</p><p class="toast-hint">A report was sent to the game developer.</p></div></div></div>';
+
+		// Insert Container
+		var _tcont = $('#ocugine-error'); // Get Other Containers
+		if(_tcont.length>0){ // Has Containers
+			_tcont.remove(); // Remove Element
+		}
+		$('body').append(_cont).show();
+
+		// Set Timeout
+		var _tm = setTimeout(function(){
+			$('#ocugine-error').hide();
+			$('#ocugine-error').remove();
+			_closed(); // Closed
+		}, _timeout);
+
+		// Toast Click
+		$('#ocugine-error').off('click').on('click', function(){
+			$('#ocugine-error').hide();
+			$('#ocugine-error').remove();
+			_closed(); // Closed
 		});
 	}
 
 	//======================================================
-	//	@method			showProfile()
-	//	@usage			Show Profile Page
-	//	@args				(method) closed - Closed Callback
+	//	@method			showAchievement()
+	//	@usage			Show Achievement Toast
+	//	@args				(double) uid - Achievement UID
+	//							(string) postion - (top-left, top-right, bottom-left, bottom-right)
+	//							(float) timeout - timeout in ms
+	//							(method) closed - Closed Callback
 	//	@returns		none
 	//======================================================
-	showProfile(closed){
+	showAchievement(uid, position, timeout, closed){
 		var _self = this;
-		let _closed = (this._isEmpty(closed) || !this._isFunction(closed))?function(){}:closed; // Success Callback
-		let wind; wind = window.open(_self.instance._getServerUrl()+'profile/'); // Window
+		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
+		let _position = (_self.instance._isEmpty(position))?"bottom-left":position;
+		if(!_self.instance._isString(_position) || (_position!='top-left' && _position!='top-right' && _position!='bottom-left' && _position!='bottom-right')){
+			throw "Failed to show achievement toast. The position argument is wrong.";
+		}
+		let _timeout = (_self.instance._isEmpty(timeout) || !_self.instance._isNumber(timeout))?10000:timeout;
 
+		// Get Achievement Content
+		_self.instance.module("gaming").achievements.getData(uid, function(element){
+			// Generate Container
+			var _cont = '<div id="ocugine-achievement" class="ocugine-toast '+_position+' default-font animated fadeIn"><div class="inner"><div class="toast-icon imaged" style="background-image: url(\''+element.image+'\');"></div>'+
+									'<div class="toast-media"><h2 class="toast-headline">'+element.name+'</h2><p class="toast-body">'+element.desc+'</p><p class="toast-hint">New achievement unlocked!</p></div></div></div>';
 
-		// Set timer
-		let timer = setInterval(function() { // Interval for Checking
-			if(wind.closed) { // Window Closed
-				clearInterval(timer); // Clear Timer
-				_closed();
+			// Insert Container
+			var _tcont = $('#ocugine-achievement'); // Get Other Containers
+			if(_tcont.length>0){ // Has Containers
+				_tcont.remove(); // Remove Element
 			}
-		}, 1000);
+			$('body').append(_cont).show();
+
+			// Set Timeout
+			var _tm = setTimeout(function(){
+				$('#ocugine-achievement').hide();
+				$('#ocugine-achievement').remove();
+				_closed(); // Closed
+			}, _timeout);
+
+			// Toast Click
+			$('#ocugine-achievement').off('click').on('click', function(){
+				$('#ocugine-achievement').hide();
+				$('#ocugine-achievement').remove();
+				_self.openAchievementsUI();
+				_closed(); // Closed
+			});
+		});
 	}
 
+	//======================================================
+	//	@method			showNewMission()
+	//	@usage			Show New Mission Toast
+	//	@args				(double) uid - Mission UID
+	//							(string) postion - (top-left, top-right, bottom-left, bottom-right)
+	//							(float) timeout - timeout in ms
+	//							(method) closed - Closed Callback
+	//	@returns		none
+	//======================================================
+	showNewMission(uid, position, timeout, closed){
+		var _self = this;
+		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
+		let _position = (_self.instance._isEmpty(position))?"bottom-left":position;
+		if(!_self.instance._isString(_position) || (_position!='top-left' && _position!='top-right' && _position!='bottom-left' && _position!='bottom-right')){
+			throw "Failed to show mission toast. The position argument is wrong.";
+		}
+		let _timeout = (_self.instance._isEmpty(timeout) || !_self.instance._isNumber(timeout))?10000:timeout;
 
+		// Get Achievement Content
+		_self.instance.module("gaming").missions.getData(uid, function(element){
+			// Generate Container
+			var _cont = '<div id="ocugine-mission" class="ocugine-toast '+_position+' default-font animated fadeIn"><div class="inner"><div class="toast-icon imaged" style="background-image: url(\''+element.image+'\');"></div>'+
+									'<div class="toast-media"><h2 class="toast-headline">'+element.name+'</h2><p class="toast-body">'+element.desc+'</p><p class="toast-hint">New mission unlocked!</p></div></div></div>';
+
+			// Insert Container
+			var _tcont = $('#ocugine-mission'); // Get Other Containers
+			if(_tcont.length>0){ // Has Containers
+				_tcont.remove(); // Remove Element
+			}
+			$('body').append(_cont).show();
+
+			// Set Timeout
+			var _tm = setTimeout(function(){
+				$('#ocugine-mission').hide();
+				$('#ocugine-mission').remove();
+				_closed(); // Closed
+			}, _timeout);
+
+			// Toast Click
+			$('#ocugine-mission').off('click').on('click', function(){
+				$('#ocugine-mission').hide();
+				$('#ocugine-mission').remove();
+				_self.openMissionsUI();
+				_closed(); // Closed
+			});
+		});
+	}
 }
 
 //======================================================

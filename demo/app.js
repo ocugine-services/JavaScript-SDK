@@ -41,39 +41,89 @@ return NProgress;});
 //	App Initialization Asset
 //======================================================
 $(document).ready(function(){
-	// AJAX Setup
+	// AJAX Preloader
 	$.ajaxSetup({
     beforeSend: function(){ NProgress.start(); },
     complete: function(){ NProgress.done(); }
   });
 
-	// Initialize Ocugine SDK
-	let OSDK = new OcugineSDK({ // App Settings
-		app_id: 59,
-		app_key: "0839d2a962df2544bdb76c10a2ba5f296c6b32c6"
-	}, { // SDK Settings
-		language: "EN",
-		auto_analytics: true
-	}, true);
+	// Initialize Application
+	let OSDK = null;
+	$('#app_id').val(localStorage.getItem("app_id"));
+	$('#app_key').val(localStorage.getItem("app_key"));
 
-	// Check Access Token
-	if(OSDK.module("Auth").access_token=="" || OSDK.module("Auth").access_token.length<0){ // Not Authenticated
+	// Check SDK Initialization
+	$('#setup_sdk').off('click').on('click',function(){
+		let _app_id = $('#app_id').val();
+		let _app_key = $('#app_key').val();
+		localStorage.setItem("app_id", _app_id);
+		localStorage.setItem("app_key", _app_key);
+
+		// Initialize SDK
+		OSDK = new OcugineSDK({ // App Settings
+			app_id: _app_id, // Application ID
+			app_key: _app_key // Application Key
+		}, { // SDK Settings
+			show_ui: true, // Show UI for Methods or not
+			language: "EN", // API Language
+			auto_analytics: true, // Auto Analytics for Application
+			platform: "web", // Game Platform
+			auto_reports: true // Auto Reporting (Errors) - Error's Logging
+		}, true);
+
+		// Show Next Page
+		$('#app_setup').hide();
+		$('#auth').show();
+	});
+
+	// OAuth
+	$('#auth_player').off('click').on('click', function(){
 		OSDK.module("UI").showOAuth(function(){
-			initializeJSTester(OSDK); // Init Tester
+			$('#auth').hide();
+			$('#app').show();
+			initializeApp(OSDK);
 		}, function(error){
 			alert(error);
 		});
-	}else{ // Authenticated
-		initializeJSTester(OSDK); // Init Tester
-	}
+	});
 });
 
-//======================================================
-//	App Testing
-//======================================================
-function initializeJSTester(OSDK){
-	//OSDK.module("Analytics").getFlags();
-	//OSDK.module("localization").getLanguagesList();
-	//OSDK.module("gaming").leaderboards.getLeaderboards();
-	//OSDK.module("gaming").missions.getList("Mission #2");
+// Initialize Application
+function initializeApp(OSDK){
+	// Initialize Profile
+	OSDK.module("Users").users.getCurrentUser(function(data){
+		$('#profile_avatar').attr('src', data.base_data.avatar);
+		var _full_name = (data.base_data.first_name.length>0)?data.base_data.first_name+' '+data.base_data.last_name + ': ':'Basic Information: ';
+		$('#profile_identity').empty().append(_full_name);
+		$('#profile_email').empty().append(data.base_data.email);
+		$('#profile_uid').empty().append(data.base_data.uid);
+		var _cont = '';
+		for(i=0;i<data.advanced_fields.length; i++){
+			var _vlt = (data.advanced_fields[i].value.length>0)?data.advanced_fields[i].value:'-';
+			_cont += '<p class="mt-0 mb-0"><b>'+data.advanced_fields[i].name+':</b> '+_vlt+'</p>';
+		}
+		$('#advanced_fields').empty().append(_cont);
+		initializeAchivs(OSDK);
+	}, function(error){
+		$('#profile_error').empty().append(error).show();
+	});
+
+
+}
+
+// Initialize Achievements
+function initializeAchivs(OSDK){
+	OSDK.module("Gaming").achievements.getPlayerList(function(data){
+		var _cont = '';
+		for(i=0;i<data.list.length; i++){
+			var _achiv = data.list[i].info; // Achievement Data
+			_cont += '<div class="card mb-2"><div class="card-body"><div class="media"><img class="mr-3" src="'+_achiv.image+'" style="max-width: 64px; border-radius: 100%;" /><div class="media-body">';
+			_cont += '<h5 class="mt-0">'+_achiv.name+'</h5>';
+			_cont += _achiv.desc;
+			_cont += '</div></div></div></div>';
+		}
+		$('#achivs').empty().append(_cont);
+	}, function(error){
+		$('#achivs_error').empty().append(error).show();
+	});
 }
