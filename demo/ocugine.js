@@ -6,8 +6,8 @@
 //
 //	@name           Ocugine SDK
 //  @developer      Ocugine Platform
-//  @version        0.4.0a
-//  @build          401
+//  @version        0.4.1
+//  @build          412
 //  @url            https://ocugine.pro/
 //  @docs           https://docs.ocugine.pro/
 //  @license        MIT
@@ -46,13 +46,12 @@ class OcugineSDK{
 	//	@args			(object) app_settings - Application Settings
 	//					(object) sdk_settings - SDK Settings
 	//					(bool) debug - Debug Mode
-	//	@returns		none
 	//======================================================
-	constructor(app_settings, sdk_settings, debug){
+	constructor(app_settings = null, sdk_settings = {}, debug = false){
 		// Check Variables Values
 		var _self = this;
-		if(_self._isEmpty(app_settings) || _self._isEmpty(sdk_settings)){
-			throw "Failed to initialize Ocugine SDK. Please, check SDK Settings.";
+		if(_self._isEmpty(app_settings)){
+			throw "Failed to initialize Ocugine SDK. Please, check SDK Application Settings.";
 		}
 
 		// Set Base Settings
@@ -98,10 +97,8 @@ class OcugineSDK{
 	//					(object) data - Data to send. Ex: { param1: val1, param2: val2 }
 	//					(function) success - Done Callback
 	//					(function) error - Error Callback
-	//	@returns		none
-	//  #CALLISHERE
 	//======================================================
-	call(method, data, success, error){
+	call(method, data = {}, success  = function(){}, error  = function(){}){
 		// Check Method
 		var _self = this;
 		if(this._isEmpty(method) || !this._isString(method)) throw "API Method argument must contain string object and method name. For example: users.get_list";
@@ -196,7 +193,6 @@ class OcugineSDK{
 	//	@method			_getAPIUrl()
 	//	@usage			Get Full API URL based on
 	//					SDK Settings (see constructor)
-	//	@args			none
 	//	@returns		(string) url - API URL
 	//======================================================
 	_getAPIUrl(){
@@ -209,7 +205,6 @@ class OcugineSDK{
 	//======================================================
 	//	@method			_getServerUrl()
 	//	@usage			Get Server URL
-	//	@args				none
 	//	@returns		(string) url - API URL
 	//======================================================
 	_getServerUrl(){
@@ -338,8 +333,6 @@ class Ocugine_Auth{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
-	//	@args			none
-	//	@returns		none
 	//======================================================
 	constructor(parent){
 		this.instance = parent; // Set Parent Object
@@ -352,12 +345,11 @@ class Ocugine_Auth{
 	//======================================================
 	//	@method			get_link()
 	//	@usage			Get OAuth Link
-	//	@args				(string/array) grants - OAuth grants
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(string/array) grants - OAuth grants
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	getLink(grants, success, error){
+	getLink(grants = "all", success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -380,11 +372,10 @@ class Ocugine_Auth{
 	//======================================================
 	//	@method			getToken()
 	//	@usage			Get OAuth Token
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	getToken(success, error){
+	getToken(success = function(){}, error = function(){}){
 		// Set Callbacks
 		let _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -414,11 +405,10 @@ class Ocugine_Auth{
 	//======================================================
 	//	@method			getGrants()
 	//	@usage			Get OAuth Grants by Token
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	getGrants(success, error){
+	getGrants(success = function(){}, error = function(){}){
 		// Set Callbacks
 		let _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -446,11 +436,10 @@ class Ocugine_Auth{
 	//======================================================
 	//	@method			logout()
 	//	@usage			Remove OAuth Token
-	//	@args				(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	logout(success, error){
+	logout(success = function(){}, error = function(){}){
 		var _self = this;
 
 		// Set Callbacks
@@ -625,8 +614,6 @@ class Ocugine_Gaming{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
-	//	@args			none
-	//	@returns		none
 	//======================================================
 	constructor(parent){
 		this.instance = parent; // Set Parent Object
@@ -691,11 +678,10 @@ class Ocugine_Gaming{
 	//======================================================
 	//	@method			_getLeaderboards()
 	//	@usage			Get Leaderboards
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getLeaderboards(success, error){
+	_getLeaderboards(success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -716,12 +702,11 @@ class Ocugine_Gaming{
 	//======================================================
 	//	@method			_getLeaderboardData()
 	//	@usage			Get Leaderboard data
-	//							(double) uid - Leaderboard UID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(double) uid - Leaderboard UID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getLeaderboardData(uid, success, error){
+	_getLeaderboardData(uid, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -742,12 +727,11 @@ class Ocugine_Gaming{
 	//======================================================
 	//	@method			_getPlayersTop()
 	//	@usage			Get Players Top data for Leaderboard
-	//							(double) uid - Leaderboard UID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(double) uid - Leaderboard UID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getPlayersTop(uid, success, error){
+	_getPlayersTop(uid, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -768,12 +752,11 @@ class Ocugine_Gaming{
 	//======================================================
 	//	@method			_getBoardScores()
 	//	@usage			Get Board Scores for current player
-	//							(double) uid - Leaderboard UID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(double) uid - Leaderboard UID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getBoardScores(uid, success, error){
+	_getBoardScores(uid, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -800,12 +783,11 @@ class Ocugine_Gaming{
 	//======================================================
 	//	@method			_setBoardScores()
 	//	@usage			Set Board Scores for current player
-	//							(double) uid - Leaderboard UID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(double) uid - Leaderboard UID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_setBoardScores(uid, scores, success, error){
+	_setBoardScores(uid, scores, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -833,11 +815,10 @@ class Ocugine_Gaming{
 	//======================================================
 	//	@method			_getAchievements()
 	//	@usage			Get Achievements
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getAchievements(success, error){
+	_getAchievements(success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -858,12 +839,11 @@ class Ocugine_Gaming{
 	//======================================================
 	//	@method			_getAchievementData()
 	//	@usage			Get Achievement Data
-	//							(double) uid - Achievement UID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(double) uid - Achievement UID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getAchievementData(uid, success, error){
+	_getAchievementData(uid, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -882,13 +862,12 @@ class Ocugine_Gaming{
 	}
 
 	//======================================================
-	//	@method			_getPlayerAchievement()
+	//	@method			_getPlayerAchievements()
 	//	@usage			Get Achievements for current player
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getPlayerAchievements(success, error){
+	_getPlayerAchievements(success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -914,12 +893,11 @@ class Ocugine_Gaming{
 	//======================================================
 	//	@method			_unlockPlayerAchievement()
 	//	@usage			Unlock Achievement for current player
-	//							(double) uid - Achievement UID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(double) uid - Achievement UID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_unlockPlayerAchievement(uid, success, error){
+	_unlockPlayerAchievement(uid, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -947,13 +925,12 @@ class Ocugine_Gaming{
 	//======================================================
 	//	@method			_getMissions()
 	//	@usage			Get Missions List
-	//							(string) search - Search by Mission Name or Desc
-	//							(double) page - Page UID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(string) search - Search by Mission Name or Desc
+	//					(double) page - Page UID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getMissions(search = "", page = 1, success, error){
+	_getMissions(search = "", page = 1, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -976,12 +953,11 @@ class Ocugine_Gaming{
 	//======================================================
 	//	@method			_getMissionData()
 	//	@usage			Get Mission Data by UID
-	//							(double) uid - Achievement UID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(double) uid - Achievement UID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getMissionData(uid, success, error){
+	_getMissionData(uid, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1002,11 +978,10 @@ class Ocugine_Gaming{
 	//======================================================
 	//	@method			_getPlayerMissionsList()
 	//	@usage			Get Current Player Missions List
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getPlayerMissionsList(success, error){
+	_getPlayerMissionsList(success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1032,12 +1007,11 @@ class Ocugine_Gaming{
 	//======================================================
 	//	@method			_addMissionToPlayerList()
 	//	@usage			Add Mission from To Player List
-	//							(double) uid - Mission UID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(double) uid - Mission UID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_addMissionToPlayerList(uid, success, error){
+	_addMissionToPlayerList(uid, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1065,12 +1039,11 @@ class Ocugine_Gaming{
 	//======================================================
 	//	@method			_removeMissionFromPlayerList()
 	//	@usage			Remove Mission from Player List
-	//							(double) uid - Mission UID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(double) uid - Mission UID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_removeMissionFromPlayerList(uid, success, error){
+	_removeMissionFromPlayerList(uid, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1097,13 +1070,12 @@ class Ocugine_Gaming{
 	//======================================================
 	//	@method			_setMissionsScores()
 	//	@usage			Set Mission Scores for Player
-	//							(double) uid - Mission UID
-	//							(double) scores - Player Scores
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(double) uid - Mission UID
+	//					(double) scores - Player Scores
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_setMissionsScores(uid, scores, success, error){
+	_setMissionsScores(uid, scores, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1137,8 +1109,6 @@ class Ocugine_Monetization{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
-	//	@args			none
-	//	@returns		none
 	//======================================================
 	constructor(parent){
 		this.instance = parent; // Set Parent Object
@@ -1154,8 +1124,6 @@ class Ocugine_Notifications{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
-	//	@args			none
-	//	@returns		none
 	//======================================================
 	constructor(parent){
 		this.instance = parent; // Set Parent Object
@@ -1164,11 +1132,10 @@ class Ocugine_Notifications{
 	//======================================================
 	//	@method			getList()
 	//	@usage			Get Notifications List
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	getList(success, error){
+	getList(success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1191,12 +1158,11 @@ class Ocugine_Notifications{
 	//======================================================
 	//	@method			getData()
 	//	@usage			Get Notification Data
-	//							(double) uid - Notification UID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(double) uid - Notification UID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	getData(uid, success, error){
+	getData(uid, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1217,12 +1183,11 @@ class Ocugine_Notifications{
 	//======================================================
 	//	@method			readNotification()
 	//	@usage			Read Notification Data
-	//							(double) uid - Notification UID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//					(double) uid - Notification UID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	readNotification(uid, success, error){
+	readNotification(uid, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1250,8 +1215,6 @@ class Ocugine_Marketing{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
-	//	@args			none
-	//	@returns		none
 	//======================================================
 	constructor(parent){
 		this.instance = parent; // Set Parent Object
@@ -1272,8 +1235,6 @@ class Ocugine_Ads{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
-	//	@args			none
-	//	@returns		none
 	//======================================================
 	constructor(parent){
 		this.instance = parent; // Set Parent Object
@@ -1294,8 +1255,6 @@ class Ocugine_Backend{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
-	//	@args				none
-	//	@returns		none
 	//======================================================
 	constructor(parent){
 		this.instance = parent; // Set Parent Object
@@ -1304,6 +1263,7 @@ class Ocugine_Backend{
 		// Create Subobjects
 		this.storage = {};
 		this.database = {};
+		this.saves = {};
 		this.multiplayer = {};
 		this.liveconfs = {};
 		this.backend = {};
@@ -1323,15 +1283,31 @@ class Ocugine_Backend{
 		this.liveconfs.getConfig = function(uid, success, error){
 			_self._getConfig(uid, success, error);
 		};
+		this.saves.list = null;
+		this.saves.getList = function(success, error){
+			_self._getAllSaves(success, error);
+		};
+		this.saves.getData = function(uid, success, error){
+			_self._getSaveData(uid, success, error);
+		};
+		this.saves.create = function(data, success, error){
+			_self._setSaveData(-1, data, success, error);
+		};
+		this.saves.update = function(uid, data, success, error){
+			_self._setSaveData(uid, data, success, error);
+		};
+		this.saves.remove = function(uid, success, error){
+			_self._removeSaveData(uid, success, error);
+		};
 	}
 
 	//======================================================
 	//	@method			_getContentList()
 	//	@usage			Get content List
-	//	@args				(method) success - Success Callback
-	//							(method) error - Error Callback
+	//	@args			(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getContentList(search = "", page = 1, success, error){
+	_getContentList(search = "", page = 1, success  = function(){}, error  = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
@@ -1353,11 +1329,11 @@ class Ocugine_Backend{
 	//======================================================
 	//	@method			_getContent()
 	//	@usage			Get content Data
-	//	@args				(double) content_id - Content ID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
+	//	@args			(double) content_id - Content ID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getContent(content_id, success, error){
+	_getContent(content_id, success  = function(){}, error  = function(){}){
 		// Set Callbacks
 		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
@@ -1376,10 +1352,10 @@ class Ocugine_Backend{
 	//======================================================
 	//	@method			_getAllConfigs()
 	//	@usage			Get all live configs
-	//	@args				(method) success - Success Callback
-	//							(method) error - Error Callback
+	//	@args			(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getAllConfigs(success, error){
+	_getAllConfigs(success  = function(){}, error  = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
@@ -1399,11 +1375,11 @@ class Ocugine_Backend{
 	//======================================================
 	//	@method			_getConfig()
 	//	@usage			Get Live Configuration by UID
-	//	@args				(double) content_id - Content ID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
+	//	@args			(double) content_id - Content ID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getConfig(uid, success, error){
+	_getConfig(uid, success  = function(){}, error  = function(){}){
 		// Set Callbacks
 		let _success = (this._isEmpty(success) || !this._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (this._isEmpty(error) || !this._isFunction(error))?function(){}:error; // Error Callback
@@ -1419,6 +1395,131 @@ class Ocugine_Backend{
 		});
 	}
 
+	//======================================================
+	//	@method			_getAllSaves()
+	//	@usage			Get All Player Saves
+	//	@args			(method) success - Success Callback
+	//					(method) error - Error Callback
+	//======================================================
+	_getAllSaves(success  = function(){}, error  = function(){}){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Check Access Token
+		if(localStorage.getItem('access_token')!=""){
+			// Call API Request
+			_self.instance.call("cloud.get_player_saves", {
+				app_id: _self.instance.application.app_id,
+				app_key: _self.instance.application.app_key,
+				access_token: localStorage.getItem('access_token')
+			}, function(data){
+				_self.saves.list = data.list;
+				_success(data);
+			}, function(error){
+				_error(error);
+			});
+		}else{
+			_error("Failed to get player saves list. Player is not Authenticated");
+		}
+	}
+
+	//======================================================
+	//	@method			_getSaveData()
+	//	@usage			Get Player Save Data
+	//	@args			(double) uid - Save UID
+	// 					(method) success - Success Callback
+	//					(method) error - Error Callback
+	//======================================================
+	_getSaveData(uid, success  = function(){}, error  = function(){}){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Check Access Token
+		if(localStorage.getItem('access_token')!=""){
+			// Call API Request
+			_self.instance.call("cloud.get_save_data", {
+				app_id: _self.instance.application.app_id,
+				app_key: _self.instance.application.app_key,
+				uid: uid,
+				access_token: localStorage.getItem('access_token')
+			}, function(data){
+				_success(data);
+			}, function(error){
+				_error(error);
+			});
+		}else{
+			_error("Failed to get player save data. Player is not Authenticated");
+		}
+	}
+
+	//======================================================
+	//	@method			_setSaveData()
+	//	@usage			Set Player Save Data
+	//	@args			(double) uid - Save UID
+	//					(string) data - Save Data
+	// 					(method) success - Success Callback
+	//					(method) error - Error Callback
+	//======================================================
+	_setSaveData(uid, data, success  = function(){}, error  = function(){}){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Check Access Token
+		if(localStorage.getItem('access_token')!=""){
+			// Call API Request
+			_self.instance.call("cloud.set_save_data", {
+				app_id: _self.instance.application.app_id,
+				app_key: _self.instance.application.app_key,
+				uid: uid,
+				data: data,
+				access_token: localStorage.getItem('access_token')
+			}, function(data){
+				_success(data);
+			}, function(error){
+				_error(error);
+			});
+		}else{
+			_error("Failed to save player data. Player is not Authenticated");
+		}
+	}
+
+	//======================================================
+	//	@method			_removeSaveData()
+	//	@usage			Remove Player Save Data
+	//	@args			(double) uid - Save UID
+	// 					(method) success - Success Callback
+	//					(method) error - Error Callback
+	//======================================================
+	_removeSaveData(uid, success  = function(){}, error  = function(){}){
+		// Set Callbacks
+		var _self = this;
+		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
+		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
+
+		// Check Access Token
+		if(localStorage.getItem('access_token')!=""){
+			// Call API Request
+			_self.instance.call("cloud.remove_save_data", {
+				app_id: _self.instance.application.app_id,
+				app_key: _self.instance.application.app_key,
+				uid: uid,
+				access_token: localStorage.getItem('access_token')
+			}, function(data){
+				_success(data);
+			}, function(error){
+				_error(error);
+			});
+		}else{
+			_error("Failed to remove player save data. Player is not Authenticated");
+		}
+	}
+
 	/* TODO: Other Backend Methods */
 }
 
@@ -1429,8 +1530,6 @@ class Ocugine_Reports{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
-	//	@args			none
-	//	@returns		none
 	//======================================================
 	constructor(parent){
 		this.instance = parent; // Set Parent Object
@@ -1458,14 +1557,14 @@ class Ocugine_Reports{
 	//======================================================
 	//	@method			_sendErrorReport()
 	//	@usage			Send Error Report
-	//	@args				(string) name - Report Name
-	//							(string) body - Report Body
-	//							(string) code - Short Error Code
-	//							(bool) critical - Critical State
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
+	//	@args			(string) name - Report Name
+	//					(string) body - Report Body
+	//					(string) code - Short Error Code
+	//					(bool) critical - Critical State
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_sendErrorReport(name, body, code, critical, success, error){
+	_sendErrorReport(name, body, code, critical = 1, success  = function(){}, error  = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1491,11 +1590,11 @@ class Ocugine_Reports{
 	//======================================================
 	//	@method			_getErrorReport()
 	//	@usage			Get Error Report
-	//	@args				(double) uid - Report ID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
+	//	@args			(double) uid - Report ID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getErrorReport(uid, success, error){
+	_getErrorReport(uid, success  = function(){}, error  = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1515,12 +1614,12 @@ class Ocugine_Reports{
 	//======================================================
 	//	@method			_sendPerformanceReport()
 	//	@usage			Send Performance Report
-	//	@args				(string) name - Report Name
-	//							(string) body - Report Body
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
+	//	@args			(string) name - Report Name
+	//					(string) body - Report Body
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_sendPerformanceReport(name, body, success, error){
+	_sendPerformanceReport(name, body, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1541,11 +1640,11 @@ class Ocugine_Reports{
 	//======================================================
 	//	@method			_getPerformanceReport()
 	//	@usage			Get Performance Report
-	//	@args				(double) uid - Report ID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
+	//	@args			(double) uid - Report ID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getPerformanceReport(uid, success, error){
+	_getPerformanceReport(uid, success = function(){}, error  = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1598,10 +1697,10 @@ class Ocugine_Localization{
 	//======================================================
 	//	@method			_getLanguagesList()
 	//	@usage			Get Languages List
-	//	@args				(method) success - Success Callback
-	//							(method) error - Error Callback
+	//	@args			(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getLanguagesList(success, error){
+	_getLanguagesList(success = function(){}, error = function(){}){
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
@@ -1621,10 +1720,10 @@ class Ocugine_Localization{
 	//======================================================
 	//	@method			_getLocalesList()
 	//	@usage			Get Locales List
-	//	@args				(method) success - Success Callback
-	//							(method) error - Error Callback
+	//	@args			(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getLocalesList(success, error, search ="", page = 1){
+	_getLocalesList(search ="", page = 1, success = function(){}, error = function(){}){
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
 		let _error = (_self.instance._isEmpty(error) || !_self.instance._isFunction(error))?function(){}:error; // Error Callback
@@ -1646,11 +1745,11 @@ class Ocugine_Localization{
 	//======================================================
 	//	@method			_getLanguage()
 	//	@usage			Get Language Info
-	//	@args				(string) code - Language Code
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
+	//	@args			(string) code - Language Code
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getLanguage(code, success, error){
+	_getLanguage(code, success = function(){}, error  = function(){}){
 		// Check Params
 		var _self = this;
 		if(_self.instance._isEmpty(code) || !_self.instance._isString(code)){
@@ -1676,12 +1775,12 @@ class Ocugine_Localization{
 	//======================================================
 	//	@method			_getLocale()
 	//	@usage			Get Locale Data
-	//	@args				(string) code - Locale Code
-	//							(string) lang - language
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
+	//	@args			(string) code - Locale Code
+	//					(string) lang - language
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getLocale(code, lang, success, error){
+	_getLocale(code, lang, success  = function(){}, error  = function(){}){
 		// Check Params
 		var _self = this;
 		if(_self.instance._isEmpty(code) || _self.instance._isEmpty(lang) || !_self.instance._isString(code) || !_self.instance._isString(lang)){
@@ -1713,8 +1812,6 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
-	//	@args				none
-	//	@returns		none
 	//======================================================
 	constructor(parent){
 		this.instance = parent; // Set Parent Object
@@ -1821,10 +1918,10 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_getPolicyList()
 	//	@usage			Get policy list
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getPolicyList(success, error){
+	_getPolicyList(success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1845,11 +1942,11 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_getPolicyInfo()
 	//	@usage			Get policy info
-	//	@args				(double) policy_id - Policy ID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
+	//	@args			(double) policy_id - Policy ID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getPolicyInfo(policy_id, success, error){
+	_getPolicyInfo(policy_id, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1870,12 +1967,11 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_getBanState()
 	//	@usage			Get Ban State
-	//	@args				(double) profile_uid - Profile UID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(double) profile_uid - Profile UID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getBanState(profile_uid, success, error){
+	_getBanState(profile_uid, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1896,11 +1992,10 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_getCurrentUser()
 	//	@usage			Get Current User Data by Access Token
-	//	@args				(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getCurrentUser(success, error){
+	_getCurrentUser(success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1922,12 +2017,11 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_getUserByUID()
 	//	@usage			Get User by UID
-	//	@args				(double) uid - Profile UID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(double) uid - Profile UID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getUserByUID(uid, success, error){
+	_getUserByUID(uid, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1948,12 +2042,11 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_getUsersList()
 	//	@usage			Get Users List
-	//	@args				(double) page - Pagination Index
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(double) page - Pagination Index
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getUsersList(page, success, error){
+	_getUsersList(page, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -1975,13 +2068,12 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_findUser()
 	//	@usage			Find User by Name
-	//	@args				(string) search - Search Query
-	//							(double) page - Pagination Index
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(string) search - Search Query
+	//					(double) page - Pagination Index
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_findUser(search, page, success, error){
+	_findUser(search = "", page = 1, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2004,11 +2096,10 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_getGroupsList()
 	//	@usage			Get Users Groups for this application
-	//	@args				(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getGroupsList(success, error){
+	_getGroupsList(success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2029,12 +2120,11 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_getGroupByUID()
 	//	@usage			Get Group by UID
-	//	@args				(double) uid - Group ID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(double) uid - Group ID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getGroupByUID(uid, success, error){
+	_getGroupByUID(uid, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2055,13 +2145,12 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_setGroup()
 	//	@usage			Set Group by Group UID for Profile UID
-	//	@args				(double) profile_uid - Profile ID
-	//							(double) group_id - Group ID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(double) profile_uid - Profile ID
+	//					(double) group_id - Group ID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_setGroup(profile_uid, group_id, success, error){
+	_setGroup(profile_uid, group_id, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2083,13 +2172,12 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_getCustomFields()
 	//	@usage			Get Users Custom Fields for this app
-	//	@args				(string) search - Search Query
-	//							(page) page - Pagination Index
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(string) search - Search Query
+	//					(page) page - Pagination Index
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getCustomFields(search, page, success, error){
+	_getCustomFields(search = "", page = 1, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2112,14 +2200,13 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_setCustomField()
 	//	@usage			Set Custom Field value for user
-	//	@args				(profile_uid) - Profile UID
-	//							(field_id) - Field UID in the system
-	//							(value) - Field Value
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(profile_uid) - Profile UID
+	//					(field_id) - Field UID in the system
+	//					(value) - Field Value
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_setCustomField(profile_uid, field_id, value, success, error){
+	_setCustomField(profile_uid, field_id, value = "", success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2142,11 +2229,10 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_getCategories()
 	//	@usage			Get Support Categories
-	//	@args				(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getCategories(success, error){
+	_getCategories(success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2167,14 +2253,13 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_getTopics()
 	//	@usage			Get Topics List by category UID
-	//	@args				(double) category_id - Category UID
-	//							(string) search - Search Query
-	//							(page) page - Pagination Index
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(double) category_id - Category UID
+	//					(string) search - Search Query
+	//					(page) page - Pagination Index
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getTopics(category_id, search, page, success, error){
+	_getTopics(category_id, search = "", page = 1, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2199,14 +2284,13 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_getSupportMessages()
 	//	@usage			Get Topic Messages List
-	//	@args				(double) topic_id - Topic ID
-	//							(string) search - Search Query
-	//							(page) page - Pagination Index
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(double) topic_id - Topic ID
+	//					(string) search - Search Query
+	//					(page) page - Pagination Index
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getSupportMessages(topic_id, search, page, success, error){
+	_getSupportMessages(topic_id, search = "", page = 1, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2231,14 +2315,13 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_createTopic()
 	//	@usage			Create Support Topic
-	//	@args				(double) category_id - Category UID
-	//							(string) title - Topic Title
-	//							(string) body - Topic Body
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(double) category_id - Category UID
+	//					(string) title - Topic Title
+	//					(string) body - Topic Body
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_createTopic(category_id, title, body, success, error){
+	_createTopic(category_id, title, body, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2262,15 +2345,14 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_updateTopic()
 	//	@usage			Update Support Topic
-	//	@args				(double) topic_id - Topic ID
-	//							(double) category_id - Category UID
-	//							(string) title - Topic Title
-	//							(string) body - Topic Body
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(double) topic_id - Topic ID
+	//					(double) category_id - Category UID
+	//					(string) title - Topic Title
+	//					(string) body - Topic Body
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_updateTopic(topic_id, category_id, title, body, success, error){
+	_updateTopic(topic_id, category_id, title, body, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2295,12 +2377,11 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_closeTopic()
 	//	@usage			Close Support Topic
-	//	@args				(double) topic_id - Topic ID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(double) topic_id - Topic ID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_closeTopic(topic_id, success, error){
+	_closeTopic(topic_id, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2322,13 +2403,12 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_sendSupportMessage()
 	//	@usage			Send message to the topic
-	//	@args				(double) topic_id - Topic ID
-	//							(string) message - message text
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(double) topic_id - Topic ID
+	//					(string) message - message text
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_sendSupportMessage(topic_id, message, success, error){
+	_sendSupportMessage(topic_id, message, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2351,11 +2431,10 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_getRooms()
 	//	@usage			Get Chat Rooms
-	//	@args				(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getRooms(success, error){
+	_getRooms(success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2376,12 +2455,11 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_getChatMessages()
 	//	@usage			Get Chat Messages by Room UID
-	//	@args				(double) room_id - Room UID
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(double) room_id - Room UID
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getChatMessages(room_id, success, error){
+	_getChatMessages(room_id, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2404,13 +2482,12 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_sendChatMessage()
 	//	@usage			Send message to the Chat Room
-	//	@args				(double) room_id - Room UID
-	//							(string) message - Message Text
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(double) room_id - Room UID
+	//					(string) message - Message Text
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_sendChatMessage(room_id, message, success, error){
+	_sendChatMessage(room_id, message, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2433,13 +2510,12 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_getReviews()
 	//	@usage			Get Users Reviews for this application
-	//	@args				(string) search - Search Query
-	//							(page) page - Pagination Index
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(string) search - Search Query
+	//					(page) page - Pagination Index
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	_getReviews(search, page, success, error){
+	_getReviews(search = "", page = 1, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2462,13 +2538,13 @@ class Ocugine_Users{
 	//======================================================
 	//	@method			_sendReview()
 	//	@usage			Send Review to this app
-	//	@args				(int) stars - Stars (rating) from 1 to 5
-	//							(string) message - Review Text
-	//							(method) success - Success Callback
-	//							(method) error - Error Callback
+	//	@args			(int) stars - Stars (rating) from 1 to 5
+	//					(string) message - Review Text
+	//					(method) success - Success Callback
+	//					(method) error - Error Callback
 	//	@returns		none
 	//======================================================
-	_sendReview(stars, message, success, error){
+	_sendReview(stars, message, success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2498,8 +2574,6 @@ class Ocugine_UI{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
-	//	@args				none
-	//	@returns		none
 	//======================================================
 	constructor(parent){
 		this.instance = parent; // Set Parent Object
@@ -2509,11 +2583,10 @@ class Ocugine_UI{
 	//	@method			showOAuth()
 	//	@usage			Show OAuth Window and process auth for
 	//							this application
-	//	@args				(method) success - Success Callback
-	//							(method) error - Error Callback
-	//	@returns		none
+	//	@args			(method) success - Success Callback
+	//					(method) error - Error Callback
 	//======================================================
-	showOAuth(success, error){
+	showOAuth(success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2522,7 +2595,9 @@ class Ocugine_UI{
 		// Get Link
 		if(this.instance.module("auth").access_token==""){
 			this.instance.module("auth").getLink("all", function(data){
-				let wind; wind = window.open(data.auth_url); // Window
+				var left = (screen.width - 800) / 2;
+				var top = (screen.height - 600) / 4;
+				let wind; wind = window.open(data.auth_url, "targetWindow", 'toolbar=no, location=no, status=no, menubar=no, scrollbars=yes, resizable=yes,width=800,height=600, top=' + top + ', left=' + left); // Window
 				let timer = setInterval(function() { // Interval for Checking
 					if(wind.closed) { // Window Closed
 						clearInterval(timer); // Clear Timer
@@ -2546,25 +2621,83 @@ class Ocugine_UI{
 	}
 
 	//======================================================
-	//	@method			openProfileUI()
-	//	@usage			Show Profile Page UI
-	//	@args				(method) closed - Closed Callback
-	//	@returns		none
+	//	@method			openProfile()
+	//	@usage			Show Profile Page in the Browser
+	//	@args			(method) closed - Closed Callback
 	//======================================================
-	openProfileUI(closed){
+	openProfile(closed = function(){}){
 		var _self = this;
 		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
 
-		/* TODO: Profile UI */
+		var left = (screen.width - 800) / 2;
+		var top = (screen.height - 600) / 4;
+		let wind; wind = window.open("https://"+_self.instance.server_url+"/profile/", "targetWindow", 'toolbar=no, location=no, status=no, menubar=no, scrollbars=yes, resizable=yes,width=800,height=600, top=' + top + ', left=' + left); // Window
+		let timer = setInterval(function() { // Interval for Checking
+			if(wind.closed) { // Window Closed
+				clearInterval(timer); // Clear Timer
+				_closed(); // Send Closed Event
+			}
+		}, 1000);
+	}
+
+	//======================================================
+	//	@method			openProfileUI()
+	//	@usage			Show Profile UI
+	//	@args			(method) closed - Closed Callback
+	//======================================================
+	openProfileUI(closed = function(){}){
+		var _self = this;
+		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
+
+		/* TODO: Profile Native UI */
+	}
+
+	//======================================================
+	//	@method			openAppPage()
+	//	@usage			Show Applications Page
+	//	@args			(method) closed - Closed Callback
+	//======================================================
+	openAppPage(closed = function(){}){
+		var _self = this;
+		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
+
+		var left = (screen.width - 800) / 2;
+		var top = (screen.height - 600) / 4;
+		let wind; wind = window.open("https://"+_self.instance.server_url+"/app_page/"+_self.instance.application.app_id+"/"); // Window
+		let timer = setInterval(function() { // Interval for Checking
+			if(wind.closed) { // Window Closed
+				clearInterval(timer); // Clear Timer
+				_closed(); // Send Closed Event
+			}
+		}, 1000);
+	}
+
+	//======================================================
+	//	@method			openSupportPage()
+	//	@usage			Show Support Page in the Browser
+	//	@args			(method) closed - Closed Callback
+	//======================================================
+	openSupportPage(closed = function(){}){
+		var _self = this;
+		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
+
+		var left = (screen.width - 800) / 2;
+		var top = (screen.height - 600) / 4;
+		let wind; wind = window.open("https://"+_self.instance.server_url+"/support/"+_self.instance.application.app_id+"/"); // Window
+		let timer = setInterval(function() { // Interval for Checking
+			if(wind.closed) { // Window Closed
+				clearInterval(timer); // Clear Timer
+				_closed(); // Send Closed Event
+			}
+		}, 1000);
 	}
 
 	//======================================================
 	//	@method			openSupportUI()
 	//	@usage			Show Support UI
-	//	@args				(method) closed - Closed Callback
-	//	@returns		none
+	//	@args			(method) closed - Closed Callback
 	//======================================================
-	openSupportUI(closed){
+	openSupportUI(closed = function(){}){
 		var _self = this;
 		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
 
@@ -2572,12 +2705,11 @@ class Ocugine_UI{
 	}
 
 	//======================================================
-	//	@method			openChatUI()
-	//	@usage			Show Chat UI
-	//	@args				(method) closed - Closed Callback
-	//	@returns		none
+	//	@method			openChatsUI()
+	//	@usage			Show Chats UI
+	//	@args			(method) closed - Closed Callback
 	//======================================================
-	openChatUI(closed){
+	openChatsUI(closed = function(){}){
 		var _self = this;
 		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
 
@@ -2587,10 +2719,9 @@ class Ocugine_UI{
 	//======================================================
 	//	@method			openReviewsUI()
 	//	@usage			Show Reviews UI
-	//	@args				(method) closed - Closed Callback
-	//	@returns		none
+	//	@args			(method) closed - Closed Callback
 	//======================================================
-	openReviewsUI(closed){
+	openReviewsUI(closed = function(){}){
 		var _self = this;
 		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
 
@@ -2600,10 +2731,9 @@ class Ocugine_UI{
 	//======================================================
 	//	@method			openAchievementsUI()
 	//	@usage			Show Achievements UI
-	//	@args				(method) closed - Closed Callback
-	//	@returns		none
+	//	@args			(method) closed - Closed Callback
 	//======================================================
-	openAchievementsUI(closed){
+	openAchievementsUI(closed = function(){}){
 		var _self = this;
 		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
 
@@ -2613,10 +2743,9 @@ class Ocugine_UI{
 	//======================================================
 	//	@method			openMissionsUI()
 	//	@usage			Show Missions UI
-	//	@args				(method) closed - Closed Callback
-	//	@returns		none
+	//	@args			(method) closed - Closed Callback
 	//======================================================
-	openMissionsUI(closed){
+	openMissionsUI(closed = function(){}){
 		var _self = this;
 		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
 
@@ -2626,10 +2755,9 @@ class Ocugine_UI{
 	//======================================================
 	//	@method			openLeaderboardsUI()
 	//	@usage			Show Leaderboards UI
-	//	@args				(method) closed - Closed Callback
-	//	@returns		none
+	//	@args			(method) closed - Closed Callback
 	//======================================================
-	openLeaderboardsUI(closed){
+	openLeaderboardsUI(closed = function(){}){
 		var _self = this;
 		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
 
@@ -2639,10 +2767,9 @@ class Ocugine_UI{
 	//======================================================
 	//	@method			openNotificationsUI()
 	//	@usage			Show Notifications UI
-	//	@args				(method) closed - Closed Callback
-	//	@returns		none
+	//	@args			(method) closed - Closed Callback
 	//======================================================
-	openNotificationsUI(closed){
+	openNotificationsUI(closed = function(){}){
 		var _self = this;
 		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
 
@@ -2652,14 +2779,13 @@ class Ocugine_UI{
 	//======================================================
 	//	@method			showError()
 	//	@usage			Show Error Notification
-	//	@args				(string) title - Title
-	//							(string) body - Body
-	//							(string) postion - (top-left, top-right, bottom-left, bottom-right)
-	//							(float) timeout - timeout in ms
-	//							(method) closed - Closed Callback
-	//	@returns		none
+	//	@args			(string) title - Title
+	//					(string) body - Body
+	//					(string) postion - (top-left, top-right, bottom-left, bottom-right)
+	//					(float) timeout - timeout in ms
+	//					(method) closed - Closed Callback
 	//======================================================
-	showError(title, body, position, timeout, closed){
+	showError(title, body, position = "bottom-left", timeout = 5000, closed = function(){}){
 		var _self = this;
 		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
 		let _position = (_self.instance._isEmpty(position))?"bottom-left":position;
@@ -2669,41 +2795,43 @@ class Ocugine_UI{
 		let _timeout = (_self.instance._isEmpty(timeout) || !_self.instance._isNumber(timeout))?5000:timeout;
 
 		// Generate Container
-		var _cont = '<div id="ocugine-error" class="ocugine-toast '+_position+' default-font animated fadeIn"><div class="inner"><div class="toast-icon error"><i class="material-icons">priority_high</i></div>'+
-								'<div class="toast-media"><h2 class="toast-headline">'+title+'</h2><p class="toast-body">'+body+'</p><p class="toast-hint">A report was sent to the game developer.</p></div></div></div>';
+		var _cont = '<div class="inner"><div class="toast-icon error"><i class="material-icons">priority_high</i></div><div class="toast-media"><h2 class="toast-headline">'+title+'</h2><p class="toast-body">'+body+'</p><p class="toast-hint">A report was sent to the game developer.</p></div></div>';
 
 		// Insert Container
-		var _tcont = $('#ocugine-error'); // Get Other Containers
-		if(_tcont.length>0){ // Has Containers
-			_tcont.remove(); // Remove Element
-		}
-		$('body').append(_cont).show();
+		var _tcont = document.getElementById('ocugine-error'); // Get Other Containers
+		if(_tcont!=null) _tcont.remove(); // Remove Element
+		_tcont = document.createElement("div");
+		_tcont.id = "ocugine-error";
+		_tcont.classList.add("ocugine-toast");
+		_tcont.classList.add(_position);
+		_tcont.classList.add("default-font");
+		_tcont.innerHTML = _cont;
+		document.body.appendChild(_tcont);
 
 		// Set Timeout
 		var _tm = setTimeout(function(){
-			$('#ocugine-error').hide();
-			$('#ocugine-error').remove();
+			_tcont.style.display = "none";
+			_tcont.remove();
 			_closed(); // Closed
 		}, _timeout);
 
 		// Toast Click
-		$('#ocugine-error').off('click').on('click', function(){
-			$('#ocugine-error').hide();
-			$('#ocugine-error').remove();
+		_tcont.onclick = function(){
+			_tcont.style.display = "none";
+			_tcont.remove();
 			_closed(); // Closed
-		});
+		};
 	}
 
 	//======================================================
 	//	@method			showAchievement()
 	//	@usage			Show Achievement Toast
-	//	@args				(double) uid - Achievement UID
-	//							(string) postion - (top-left, top-right, bottom-left, bottom-right)
-	//							(float) timeout - timeout in ms
-	//							(method) closed - Closed Callback
-	//	@returns		none
+	//	@args			(double) uid - Achievement UID
+	//					(string) postion - (top-left, top-right, bottom-left, bottom-right)
+	//					(float) timeout - timeout in ms
+	//					(method) closed - Closed Callback
 	//======================================================
-	showAchievement(uid, position, timeout, closed){
+	showAchievement(uid, position = "bottom-left", timeout = 10000, closed = function(){}){
 		var _self = this;
 		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
 		let _position = (_self.instance._isEmpty(position))?"bottom-left":position;
@@ -2715,43 +2843,45 @@ class Ocugine_UI{
 		// Get Achievement Content
 		_self.instance.module("gaming").achievements.getData(uid, function(element){
 			// Generate Container
-			var _cont = '<div id="ocugine-achievement" class="ocugine-toast '+_position+' default-font animated fadeIn"><div class="inner"><div class="toast-icon imaged" style="background-image: url(\''+element.image+'\');"></div>'+
-									'<div class="toast-media"><h2 class="toast-headline">'+element.name+'</h2><p class="toast-body">'+element.desc+'</p><p class="toast-hint">New achievement unlocked!</p></div></div></div>';
+			var _cont = '<div class="inner"><div class="toast-icon imaged" style="background-image: url(\''+element.image+'\');"></div><div class="toast-media"><h2 class="toast-headline">'+element.name+'</h2><p class="toast-body">'+element.desc+'</p><p class="toast-hint">New achievement unlocked!</p></div></div>';
 
 			// Insert Container
-			var _tcont = $('#ocugine-achievement'); // Get Other Containers
-			if(_tcont.length>0){ // Has Containers
-				_tcont.remove(); // Remove Element
-			}
-			$('body').append(_cont).show();
+			var _tcont = document.getElementById('ocugine-achievement'); // Get Other Containers
+			if(_tcont!=null) _tcont.remove(); // Remove Element
+			_tcont = document.createElement("div");
+			_tcont.id = "ocugine-achievement";
+			_tcont.classList.add("ocugine-toast");
+			_tcont.classList.add(_position);
+			_tcont.classList.add("default-font");
+			_tcont.innerHTML = _cont;
+			document.body.appendChild(_tcont);
 
 			// Set Timeout
 			var _tm = setTimeout(function(){
-				$('#ocugine-achievement').hide();
-				$('#ocugine-achievement').remove();
+				_tcont.style.display = "none";
+				_tcont.remove();
 				_closed(); // Closed
 			}, _timeout);
 
 			// Toast Click
-			$('#ocugine-achievement').off('click').on('click', function(){
-				$('#ocugine-achievement').hide();
-				$('#ocugine-achievement').remove();
-				_self.openAchievementsUI();
+			_tcont.onclick = function(){
+				_tcont.style.display = "none";
+				_tcont.remove();
+				_self.openAchievements();
 				_closed(); // Closed
-			});
+			};
 		});
 	}
 
 	//======================================================
 	//	@method			showNewMission()
 	//	@usage			Show New Mission Toast
-	//	@args				(double) uid - Mission UID
-	//							(string) postion - (top-left, top-right, bottom-left, bottom-right)
-	//							(float) timeout - timeout in ms
-	//							(method) closed - Closed Callback
-	//	@returns		none
+	//	@args			(double) uid - Mission UID
+	//					(string) postion - (top-left, top-right, bottom-left, bottom-right)
+	//					(float) timeout - timeout in ms
+	//					(method) closed - Closed Callback
 	//======================================================
-	showNewMission(uid, position, timeout, closed){
+	showNewMission(uid, position = "bottom-left", timeout = 10000, closed = function(){}){
 		var _self = this;
 		let _closed = (_self.instance._isEmpty(closed) || !_self.instance._isFunction(closed))?function(){}:closed; // Closed Callback
 		let _position = (_self.instance._isEmpty(position))?"bottom-left":position;
@@ -2763,30 +2893,33 @@ class Ocugine_UI{
 		// Get Achievement Content
 		_self.instance.module("gaming").missions.getData(uid, function(element){
 			// Generate Container
-			var _cont = '<div id="ocugine-mission" class="ocugine-toast '+_position+' default-font animated fadeIn"><div class="inner"><div class="toast-icon imaged" style="background-image: url(\''+element.image+'\');"></div>'+
-									'<div class="toast-media"><h2 class="toast-headline">'+element.name+'</h2><p class="toast-body">'+element.desc+'</p><p class="toast-hint">New mission unlocked!</p></div></div></div>';
+			var _cont = '<div class="inner"><div class="toast-icon imaged" style="background-image: url(\''+element.image+'\');"></div><div class="toast-media"><h2 class="toast-headline">'+element.name+'</h2><p class="toast-body">'+element.desc+'</p><p class="toast-hint">New mission unlocked!</p></div></div>';
 
 			// Insert Container
-			var _tcont = $('#ocugine-mission'); // Get Other Containers
-			if(_tcont.length>0){ // Has Containers
-				_tcont.remove(); // Remove Element
-			}
-			$('body').append(_cont).show();
+			var _tcont = document.getElementById('ocugine-mission'); // Get Other Containers
+			if(_tcont!=null) _tcont.remove(); // Remove Element
+			_tcont = document.createElement("div");
+			_tcont.id = "ocugine-mission";
+			_tcont.classList.add("ocugine-toast");
+			_tcont.classList.add(_position);
+			_tcont.classList.add("default-font");
+			_tcont.innerHTML = _cont;
+			document.body.appendChild(_tcont);
 
 			// Set Timeout
 			var _tm = setTimeout(function(){
-				$('#ocugine-mission').hide();
-				$('#ocugine-mission').remove();
+				_tcont.style.display = "none";
+				_tcont.remove();
 				_closed(); // Closed
 			}, _timeout);
 
 			// Toast Click
-			$('#ocugine-mission').off('click').on('click', function(){
-				$('#ocugine-mission').hide();
-				$('#ocugine-mission').remove();
-				_self.openMissionsUI();
+			_tcont.onclick = function(){
+				_tcont.style.display = "none";
+				_tcont.remove();
+				_self.openMissions();
 				_closed(); // Closed
-			});
+			};
 		});
 	}
 }
@@ -2798,8 +2931,6 @@ class Ocugine_Utils{
 	//======================================================
 	//	@method			constructor()
 	//	@usage			Class Constructor
-	//	@args				none
-	//	@returns		none
 	//======================================================
 	constructor(parent){
 		this.instance = parent; // Set Parent Object
@@ -2808,10 +2939,10 @@ class Ocugine_Utils{
 	//======================================================
 	//	@method			getAPIState()
 	//	@usage			Get Current API State
-	//	@args				(function) success - Done Callback
-	//							(function) error - Error Callback
+	//	@args			(function) success - Done Callback
+	//					(function) error - Error Callback
 	//======================================================
-	getAPIState(success, error){
+	getAPIState(success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2828,10 +2959,10 @@ class Ocugine_Utils{
 	//======================================================
 	//	@method			getAPIInfo()
 	//	@usage			Get Current API Info
-	//	@args				(function) success - Done Callback
-	//							(function) error - Error Callback
+	//	@args			(function) success - Done Callback
+	//					(function) error - Error Callback
 	//======================================================
-	getAPIInfo(success, error){
+	getAPIInfo(success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this;
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2848,10 +2979,10 @@ class Ocugine_Utils{
 	//======================================================
 	//	@method			testAPPConnection()
 	//	@usage			Test Application Connection
-	//	@args				(function) success - Done Callback
-	//							(function) error - Error Callback
+	//	@args			(function) success - Done Callback
+	//					(function) error - Error Callback
 	//======================================================
-	testAPPConnection(success, error){
+	testAPPConnection(success = function(){}, error = function(){}){
 		// Set Callbacks
 		var _self = this; // Link
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback
@@ -2872,10 +3003,10 @@ class Ocugine_Utils{
 	//======================================================
 	//	@method			get_settings()
 	//	@usage			Get settings for app
-	//	@args				(function) success - Done Callback
-	//							(function) error - Error Callback
+	//	@args			(function) success - Done Callback
+	//					(function) error - Error Callback
 	//======================================================
-	get_settings(success, error){
+	get_settings(success = function(){}, error = function(){}){
 		var _self = this;
 		// Set Callbacks
 		let _success = (_self.instance._isEmpty(success) || !_self.instance._isFunction(success))?function(){}:success; // Success Callback

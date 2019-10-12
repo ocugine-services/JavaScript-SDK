@@ -26,7 +26,7 @@
 			<div style="clear: both; height: 20px;"></div>
 			<div class="jumbotron" style="padding: 2rem 2rem;">
 			  <h1 class="display-4">Welcome to the Ocugine!</h1>
-			  <p class="lead">Here you can try out some of the features of our platform before you start using Ocugine JavaScript SDK in your project.<br/><b>Current SDK Version:</b> <span class="badge badge-info">0.4.0a</span></p>
+			  <p class="lead">Here you can try out some of the features of our platform before you start using Ocugine JavaScript SDK in your project.<br/><b>Current SDK Version:</b> <span class="badge badge-info">0.4.1</span></p>
 				<a href="https://help.ocugine.pro/en/ocugine-services/sdk-documentation/javascript-sdk" target="_blank" class="btn btn-info">Documentation</a>
 			</div>
 		</div>
@@ -73,7 +73,7 @@
 		<!-- CODE BLOCK -->
 		<div id="app" class="container animated fadeIn" style="display: none;">
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-md-4 mb-2">
 					<div class="card">
 					  <div class="card-body">
 					    <h5 class="card-title">Profile</h5>
@@ -93,7 +93,8 @@
 								</div>
 							</div>
 							<hr/>
-							<p class="card-text mt-2"><a href="https://cp.ocugine.pro/profile/" class="btn btn-primary btn-block" target="_blank">Edit Profile</a></p>
+							<p class="card-text mt-2"><a href="#!" data-action="show_profile" class="btn btn-primary btn-block">View Profile</a></p>
+						  	<p class="card-text"><a href="#!" data-action="logout" class="btn btn-danger btn-block">Logout</a></p>
 					  </div>
 					</div>
 
@@ -107,51 +108,155 @@
 					  </div>
 					</div>
 				</div>
-				<div class="col-md-8">
+				<div class="col-md-8 mb-2">
 					<div class="card">
 					  <div class="card-body">
-					    <h5 class="card-title">SDK Objects</h5>
-					    <p class="card-text">The list of the Ocugine JavaScript Objects:</p>
-							<ul>
-								<li><b>OcugineSDK</b> - General SDK Class;</li>
-								<li><b>Ocugine_Auth</b> - OAuth Authentication Class;</li>
-								<li><b>Ocugine_Analytics</b> - Analytics Class (for example: events and conversions);</li>
-								<li><b>Ocugine_Gaming</b> - Game Services Class (for example: achievements);</li>
-								<ul>
-									<li><b>leaderboards</b> - Leaderboards Object;</li>
-									<li><b>achievements</b> - Achievements Object;</li>
-									<li><b>missions</b> - Missions Object;</li>
-								</ul>
-								<li><b>Ocugine_Monetization</b> - Monetization Class;</li>
-								<li><b>Ocugine_Notifications</b> - In-Game Notifications class;</li>
-								<li><b>Ocugine_Marketing</b> - Marketing Class;</li>
-								<li><b>Ocugine_Ads</b> - Advertising Class;</li>
-								<li><b>Ocugine_Backend</b> - Cloud Management Class;</li>
-								<ul>
-									<li><b>storage</b> - Storage Object;</li>
-									<li><b>database</b> - Database Object;</li>
-									<li><b>multiplayer</b> - Multiplayer Object;</li>
-									<li><b>liveconfs</b> - Live Configs Object;</li>
-									<li><b>backend</b> - Backend Builder Object;</li>
-								</ul>
-								<li><b>Ocugine_Reports</b> - Errors and Performance Reporting Class;</li>
-								<ul>
-									<li><b>errors</b> - Errors Reporting Object;</li>
-									<li><b>performance</b> - Performance Reporting Object;</li>
-								</ul>
-								<li><b>Ocugine_Localization</b> - Localization Class;</li>
-								<li><b>Ocugine_Users</b> - Ocugine Users Class;</li>
-								<ul>
-									<li><b>policy</b> - Policy Management Object;</li>
-									<li><b>users</b> - Users Management Object;</li>
-									<li><b>support</b> - Support System Object;</li>
-									<li><b>chats</b> - Chats Object;</li>
-									<li><b>dialogs</b> - Personal Messages Object;</li>
-									<li><b>reviews</b> - Reviews Object;</li>
-								</ul>
-								<li><b>Ocugine_UI</b> - Ocugine UI Modules Class (Requires jQuery);</li>
-								<li><b>Ocugine_Utils</b> - Ocugine Utils Class</li>
-							</ul>
+						  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+							  <li class="nav-item">
+								  <a class="nav-link active" id="pills-objects-tab" data-toggle="pill" href="#pills-objects" role="tab" aria-controls="pills-objects" aria-selected="true">SDK Objects</a>
+							  </li>
+							  <li class="nav-item">
+								  <a class="nav-link" id="pills-howto-tab" data-toggle="pill" href="#pills-howto" role="tab" aria-controls="pills-howto" aria-selected="false">How to</a>
+							  </li>
+						  </ul>
+
+						  <hr/>
+
+						  <div class="tab-content" id="pills-tabContent">
+							  <div class="tab-pane fade show active" id="pills-objects" role="tabpanel" aria-labelledby="pills-objects-tab">
+								  <h5 class="card-title">SDK Objects</h5>
+								  <p class="card-text">The list of the Ocugine JavaScript Objects:</p>
+								  <ul>
+									  <li><b>OcugineSDK</b> - General SDK Class;</li>
+									  <li><b>Ocugine_Auth</b> - OAuth Authentication Class;</li>
+									  <li><b>Ocugine_Analytics</b> - Analytics Class (for example: events and conversions);</li>
+									  <li><b>Ocugine_Gaming</b> - Game Services Class (for example: achievements);</li>
+									  <ul>
+										  <li><b>leaderboards</b> - Leaderboards Object;</li>
+										  <li><b>achievements</b> - Achievements Object;</li>
+										  <li><b>missions</b> - Missions Object;</li>
+									  </ul>
+									  <li><b>Ocugine_Monetization</b> - Monetization Class;</li>
+									  <li><b>Ocugine_Notifications</b> - In-Game Notifications class;</li>
+									  <li><b>Ocugine_Marketing</b> - Marketing Class;</li>
+									  <li><b>Ocugine_Ads</b> - Advertising Class;</li>
+									  <li><b>Ocugine_Backend</b> - Cloud Management Class;</li>
+									  <ul>
+										  <li><b>storage</b> - Storage Object;</li>
+										  <li><b>saves</b> - Cloud Saves Object;</li>
+										  <li><b>database</b> - Database Object;</li>
+										  <li><b>multiplayer</b> - Multiplayer Object;</li>
+										  <li><b>liveconfs</b> - Live Configs Object;</li>
+										  <li><b>backend</b> - Backend Builder Object;</li>
+									  </ul>
+									  <li><b>Ocugine_Reports</b> - Errors and Performance Reporting Class;</li>
+									  <ul>
+										  <li><b>errors</b> - Errors Reporting Object;</li>
+										  <li><b>performance</b> - Performance Reporting Object;</li>
+									  </ul>
+									  <li><b>Ocugine_Localization</b> - Localization Class;</li>
+									  <li><b>Ocugine_Users</b> - Ocugine Users Class;</li>
+									  <ul>
+										  <li><b>policy</b> - Policy Management Object;</li>
+										  <li><b>users</b> - Users Management Object;</li>
+										  <li><b>support</b> - Support System Object;</li>
+										  <li><b>chats</b> - Chats Object;</li>
+										  <li><b>dialogs</b> - Personal Messages Object;</li>
+										  <li><b>reviews</b> - Reviews Object;</li>
+									  </ul>
+									  <li><b>Ocugine_UI</b> - Ocugine UI Modules Class (Requires jQuery);</li>
+									  <li><b>Ocugine_Utils</b> - Ocugine Utils Class</li>
+								  </ul>
+							  </div>
+							  <div class="tab-pane fade" id="pills-howto" role="tabpanel" aria-labelledby="pills-howto-tab">
+								  <div id="accordion">
+									  <div class="card">
+										  <div class="card-header" id="headingOne">
+											  <h5 class="mb-0">
+												  <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+													  How to Initialize JS SDK?
+												  </button>
+											  </h5>
+										  </div>
+
+										  <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+											  <div class="card-body">
+												  <p><b>Connect your Ocugine SDK:</b></p>
+												  <code>&lt;script type="text/javascript" src="https://cp.ocugine.net/cdn/js-sdk-041/ocugine.min.js" crossorigin="anonymous"&gt;&lt;/script&gt;</code>
+												  <hr/>
+												  <p><b>Initialize by few code lines:</b></p>
+												  <code>
+													  let OSDK = new OcugineSDK({ // App Settings<br/>
+													  &nbsp;&nbsp;&nbsp;&nbsp;app_id: APP_ID, // Your Project ID<br/>
+													  &nbsp;&nbsp;&nbsp;&nbsp;app_key: APP_KEY // Your Client Key<br/>
+													  }, SDK_SETTINGS, DEBUG_MODE);<br/>
+												  </code>
+												  <hr/>
+												  <p><b>Where:</b></p>
+												  <ul>
+													  <li><b>APP_ID (required) - Project ID.</b></li>
+													  <li><b>APP_KEY (required) - Client Key.</b></li>
+													  <li><b>SDK_SETTINGS</b> - SDK Settings Object.</li>
+													  <li><b>DEBUG_MODE</b> - Boolean (true - debug, false - production).</li>
+												  </ul>
+												  <hr/>
+												  <p><b>SDK Settings Object:</b></p>
+												  <code>
+													  {<br/>
+													  &nbsp;&nbsp;&nbsp;&nbsp;show_ui: true,  // Show built-in UI for methods<br/>
+													  &nbsp;&nbsp;&nbsp;&nbsp;language: "EN", // API Language<br/>
+													  &nbsp;&nbsp;&nbsp;&nbsp;auto_analytics: true, // Auto Analytics for your project<br/>
+													  &nbsp;&nbsp;&nbsp;&nbsp;platform: "web", // Game Platform<br/>
+													  &nbsp;&nbsp;&nbsp;&nbsp;auto_reports: true // Auto Reporting (Errors) - Error's Logging<br/>
+													  }
+												  </code>
+											  </div>
+										  </div>
+									  </div>
+									  <div class="card">
+										  <div class="card-header" id="headingTwo">
+											  <h5 class="mb-0">
+												  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+													  How to Authenticate Users?
+												  </button>
+											  </h5>
+										  </div>
+										  <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+											  <div class="card-body">
+												  <p><b>Use this method for simple authentication:</b></p>
+												  <code>
+													  OSDK.module("UI").showOAuth(function(data){<br/>
+													  &nbsp;&nbsp;/* User Authenticated */<br/>
+													  }, function(error){<br/>
+													  &nbsp;&nbsp;/* Authentication Error */<br/>
+													  });
+												  </code>
+												  <hr/>
+												  <p><b>This method shown authentication page in new window. If you want to work with authentication manually - please, use <i>Ocugine_Auth</i> object.</b></p>
+											  </div>
+										  </div>
+									  </div>
+									  <div class="card">
+										  <div class="card-header" id="headingFour">
+											  <h5 class="mb-0">
+												  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+													  How to show profile page?
+												  </button>
+											  </h5>
+										  </div>
+										  <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+											  <div class="card-body">
+												  <p><b>You can redirect user to:</b></p>
+												  <code>https://cp.ocugine.pro/profile/</code>
+												  <hr/>
+												  <p>Or call this method from Ocugine_UI object:</p>
+												  <code>OSDK.module("UI").openProfile();</code>
+											  </div>
+										  </div>
+									  </div>
+								  </div>
+							  </div>
+						  </div>
 					  </div>
 					</div>
 				</div>
