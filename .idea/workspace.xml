@@ -1,0 +1,878 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="83fec024-44d1-4cf1-92c4-9d75e1c8bcef" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/demo/app.js" afterPath="$PROJECT_DIR$/demo/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/demo/index.html" afterPath="$PROJECT_DIR$/demo/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/demo/ocugine.css" afterPath="$PROJECT_DIR$/demo/ocugine.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/demo/ocugine.js" afterPath="$PROJECT_DIR$/demo/ocugine.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ocugine.css" afterPath="$PROJECT_DIR$/src/ocugine.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ocugine.js" afterPath="$PROJECT_DIR$/src/ocugine.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ocugine.min.css" afterPath="$PROJECT_DIR$/src/ocugine.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ocugine.min.js" afterPath="$PROJECT_DIR$/src/ocugine.min.js" />
+    </list>
+    <ignored path="$PROJECT_DIR$/.tmp/" />
+    <ignored path="$PROJECT_DIR$/temp/" />
+    <ignored path="$PROJECT_DIR$/tmp/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/demo/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1326">
+              <caret line="108" column="26" lean-forward="true" selection-start-line="108" selection-start-column="26" selection-end-line="108" selection-end-column="26" />
+              <folding>
+                <element signature="n#div#1;n#body#0;n#html#0;n#!!top" expanded="false" />
+                <element signature="n#div#2;n#body#0;n#html#0;n#!!top" expanded="false" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="false" />
+                <element signature="n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="false" />
+                <element signature="e#8669#8673#0" expanded="true" />
+                <element signature="e#8785#8789#0" expanded="true" />
+                <element signature="e#8789#8793#0" expanded="true" />
+                <element signature="e#8800#8804#0" expanded="true" />
+                <element signature="e#8990#8996#0" expanded="true" />
+                <element signature="e#8996#9002#0" expanded="true" />
+                <element signature="e#9002#9008#0" expanded="true" />
+                <element signature="e#9008#9014#0" expanded="true" />
+                <element signature="e#9069#9075#0" expanded="true" />
+                <element signature="e#9075#9081#0" expanded="true" />
+                <element signature="e#9081#9087#0" expanded="true" />
+                <element signature="e#9087#9093#0" expanded="true" />
+                <element signature="e#9709#9715#0" expanded="true" />
+                <element signature="e#9715#9721#0" expanded="true" />
+                <element signature="e#9721#9727#0" expanded="true" />
+                <element signature="e#9727#9733#0" expanded="true" />
+                <element signature="e#9801#9807#0" expanded="true" />
+                <element signature="e#9807#9813#0" expanded="true" />
+                <element signature="e#9813#9819#0" expanded="true" />
+                <element signature="e#9819#9825#0" expanded="true" />
+                <element signature="e#9877#9883#0" expanded="true" />
+                <element signature="e#9883#9889#0" expanded="true" />
+                <element signature="e#9889#9895#0" expanded="true" />
+                <element signature="e#9895#9901#0" expanded="true" />
+                <element signature="e#9978#9984#0" expanded="true" />
+                <element signature="e#9984#9990#0" expanded="true" />
+                <element signature="e#9990#9996#0" expanded="true" />
+                <element signature="e#9996#10002#0" expanded="true" />
+                <element signature="e#10056#10062#0" expanded="true" />
+                <element signature="e#10062#10068#0" expanded="true" />
+                <element signature="e#10068#10074#0" expanded="true" />
+                <element signature="e#10074#10080#0" expanded="true" />
+                <element signature="e#10932#10938#0" expanded="true" />
+                <element signature="e#10938#10944#0" expanded="true" />
+                <element signature="e#11029#11035#0" expanded="true" />
+                <element signature="e#11035#11041#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ocugine.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/demo/ocugine.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="8" column="26" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="170" selection-end-column="1" />
+              <folding>
+                <element signature="e#1854#2074#0" expanded="false" />
+                <element signature="e#2124#2223#0" expanded="false" />
+                <element signature="e#2251#2351#0" expanded="false" />
+                <element signature="e#2376#2473#0" expanded="false" />
+                <element signature="e#2497#2593#0" expanded="false" />
+                <element signature="e#2644#2736#0" expanded="false" />
+                <element signature="e#2791#3000#0" expanded="false" />
+                <element signature="e#3034#3066#0" expanded="false" />
+                <element signature="e#3101#3233#0" expanded="false" />
+                <element signature="e#3265#3302#0" expanded="false" />
+                <element signature="e#3351#3444#0" expanded="false" />
+                <element signature="e#3490#3540#0" expanded="false" />
+                <element signature="e#3582#3646#0" expanded="false" />
+                <element signature="e#3688#3768#0" expanded="false" />
+                <element signature="e#3793#4008#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/demo/app.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="688">
+              <caret line="141" column="37" lean-forward="false" selection-start-line="141" selection-start-column="26" selection-end-line="141" selection-end-column="37" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+                <element signature="e#7111#8362#0" expanded="false" />
+                <element signature="e#7475#8132#0" expanded="false" />
+                <element signature="n#!!block;n#initializeApp#0" expanded="false" />
+                <element signature="n#!!block;n#initializeAchivs#0" expanded="false" />
+                <marker date="1570919043972" expanded="true" signature="9665:9702" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ocugine.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/demo/ocugine.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="2581" column="60" lean-forward="true" selection-start-line="2581" selection-start-column="60" selection-end-line="2581" selection-end-column="60" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+                <element signature="n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#constructor#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#call#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#module#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#_serializeData#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#_getAPIUrl#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#_getServerUrl#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#_isString#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#_isNumber#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#_isArray#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#_isFunction#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#_isBoolean#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#_isRegex#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#_isError#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#_isDate#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#_isSymbol#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#_isObject#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#!!block;n#_isEmpty#0;n#OcugineSDK#0" expanded="false" />
+                <element signature="n#Ocugine_Auth#0" expanded="false" />
+                <element signature="n#!!block;n#constructor#0;n#Ocugine_Auth#0" expanded="false" />
+                <element signature="n#!!block;n#getLink#0;n#Ocugine_Auth#0" expanded="false" />
+                <element signature="n#!!block;n#getToken#0;n#Ocugine_Auth#0" expanded="false" />
+                <element signature="n#!!block;n#getGrants#0;n#Ocugine_Auth#0" expanded="false" />
+                <element signature="n#!!block;n#logout#0;n#Ocugine_Auth#0" expanded="false" />
+                <element signature="n#Ocugine_Analytics#0" expanded="false" />
+                <element signature="n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#constructor#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#_getLeaderboards#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#_getLeaderboardData#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#_getPlayersTop#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#_getBoardScores#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#_setBoardScores#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#_getAchievements#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#_getAchievementData#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#_getPlayerAchievements#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#_unlockPlayerAchievement#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#_getMissions#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#_getMissionData#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#_getPlayerMissionsList#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#_addMissionToPlayerList#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#_removeMissionFromPlayerList#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#!!block;n#_setMissionsScores#0;n#Ocugine_Gaming#0" expanded="false" />
+                <element signature="n#Ocugine_Monetization#0" expanded="false" />
+                <element signature="n#Ocugine_Notifications#0" expanded="false" />
+                <element signature="n#!!block;n#constructor#0;n#Ocugine_Notifications#0" expanded="false" />
+                <element signature="n#!!block;n#getList#0;n#Ocugine_Notifications#0" expanded="false" />
+                <element signature="n#!!block;n#getData#0;n#Ocugine_Notifications#0" expanded="false" />
+                <element signature="n#!!block;n#readNotification#0;n#Ocugine_Notifications#0" expanded="false" />
+                <element signature="n#Ocugine_Marketing#0" expanded="false" />
+                <element signature="n#Ocugine_Ads#0" expanded="false" />
+                <element signature="n#!!block;n#constructor#0;n#Ocugine_Ads#0" expanded="false" />
+                <element signature="e#46568#46629#0" expanded="false" />
+                <element signature="e#46695#46750#0" expanded="false" />
+                <element signature="e#46839#46885#0" expanded="false" />
+                <element signature="e#46945#46992#0" expanded="false" />
+                <element signature="e#47067#47111#0" expanded="false" />
+                <element signature="e#47165#47214#0" expanded="false" />
+                <element signature="e#47268#47322#0" expanded="false" />
+                <element signature="e#47381#47436#0" expanded="false" />
+                <element signature="e#47489#47541#0" expanded="false" />
+                <element signature="n#!!block;n#_getContentList#0;n#Ocugine_Backend#0" expanded="false" />
+                <element signature="n#!!block;n#_getContent#0;n#Ocugine_Backend#0" expanded="false" />
+                <element signature="n#!!block;n#_getAllConfigs#0;n#Ocugine_Backend#0" expanded="false" />
+                <element signature="n#!!block;n#_getConfig#0;n#Ocugine_Backend#0" expanded="false" />
+                <element signature="n#!!block;n#_getAllSaves#0;n#Ocugine_Backend#0" expanded="false" />
+                <element signature="n#!!block;n#_setSaveData#0;n#Ocugine_Backend#0" expanded="false" />
+                <element signature="n#!!block;n#_removeSaveData#0;n#Ocugine_Backend#0" expanded="false" />
+                <element signature="n#Ocugine_Reports#0" expanded="false" />
+                <element signature="n#!!block;n#constructor#0;n#Ocugine_Reports#0" expanded="false" />
+                <element signature="n#!!block;n#_sendErrorReport#0;n#Ocugine_Reports#0" expanded="false" />
+                <element signature="n#!!block;n#_getErrorReport#0;n#Ocugine_Reports#0" expanded="false" />
+                <element signature="n#!!block;n#_sendPerformanceReport#0;n#Ocugine_Reports#0" expanded="false" />
+                <element signature="n#!!block;n#_getPerformanceReport#0;n#Ocugine_Reports#0" expanded="false" />
+                <element signature="n#Ocugine_Localization#0" expanded="false" />
+                <element signature="n#!!block;n#constructor#0;n#Ocugine_Localization#0" expanded="false" />
+                <element signature="n#!!block;n#_getLanguagesList#0;n#Ocugine_Localization#0" expanded="false" />
+                <element signature="n#!!block;n#_getLocalesList#0;n#Ocugine_Localization#0" expanded="false" />
+                <element signature="n#!!block;n#_getLanguage#0;n#Ocugine_Localization#0" expanded="false" />
+                <element signature="n#!!block;n#_getLocale#0;n#Ocugine_Localization#0" expanded="false" />
+                <element signature="n#!!block;n#constructor#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_getPolicyList#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_getPolicyInfo#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_getBanState#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_getCurrentUser#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_getUserByUID#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_getUsersList#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_findUser#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_getGroupsList#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_getGroupByUID#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_setGroup#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_getCustomFields#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_setCustomField#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_getCategories#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_getTopics#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_getSupportMessages#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_createTopic#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_updateTopic#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_closeTopic#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_sendSupportMessage#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_getRooms#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_getChatMessages#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_sendChatMessage#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_getReviews#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#_sendReview#0;n#Ocugine_Users#0" expanded="false" />
+                <element signature="n#!!block;n#constructor#0;n#Ocugine_UI#0" expanded="false" />
+                <element signature="n#!!block;n#showOAuth#0;n#Ocugine_UI#0" expanded="false" />
+                <element signature="n#!!block;n#openProfile#0;n#Ocugine_UI#0" expanded="false" />
+                <element signature="n#!!block;n#openProfileUI#0;n#Ocugine_UI#0" expanded="false" />
+                <element signature="n#!!block;n#openSupportUI#0;n#Ocugine_UI#0" expanded="false" />
+                <element signature="n#!!block;n#openChatsUI#0;n#Ocugine_UI#0" expanded="false" />
+                <element signature="n#!!block;n#openReviewsUI#0;n#Ocugine_UI#0" expanded="false" />
+                <element signature="n#!!block;n#openAchievementsUI#0;n#Ocugine_UI#0" expanded="false" />
+                <element signature="n#!!block;n#openMissionsUI#0;n#Ocugine_UI#0" expanded="false" />
+                <element signature="n#!!block;n#openLeaderboardsUI#0;n#Ocugine_UI#0" expanded="false" />
+                <element signature="n#!!block;n#openNotificationsUI#0;n#Ocugine_UI#0" expanded="false" />
+                <element signature="n#!!block;n#showError#0;n#Ocugine_UI#0" expanded="false" />
+                <element signature="e#104234#104311#0" expanded="false" />
+                <element signature="n#!!block;n#showAchievement#0;n#Ocugine_UI#0" expanded="false" />
+                <element signature="n#!!block;n#showNewMission#0;n#Ocugine_UI#0" expanded="false" />
+                <element signature="e#108525#108604#0" expanded="false" />
+                <element signature="n#Ocugine_Utils#0" expanded="false" />
+                <element signature="n#!!block;n#constructor#0;n#Ocugine_Utils#0" expanded="false" />
+                <element signature="n#!!block;n#getAPIState#0;n#Ocugine_Utils#0" expanded="false" />
+                <element signature="n#!!block;n#getAPIInfo#0;n#Ocugine_Utils#0" expanded="false" />
+                <element signature="n#!!block;n#testAPPConnection#0;n#Ocugine_Utils#0" expanded="false" />
+                <element signature="n#!!block;n#get_settings#0;n#Ocugine_Utils#0" expanded="false" />
+                <marker date="1570918875938" expanded="false" signature="52545:53333" ph="{...}" />
+                <marker date="1570918875938" expanded="false" signature="66380:95070" ph="{...}" />
+                <marker date="1570918875938" expanded="true" signature="106679:106724" ph="..." />
+                <marker date="1570918875938" expanded="true" signature="108913:108958" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/demo/ocugine.css" />
+        <option value="$PROJECT_DIR$/demo/ocugine.js" />
+        <option value="$PROJECT_DIR$/src/ocugine.js" />
+        <option value="$PROJECT_DIR$/src/ocugine.css" />
+        <option value="$PROJECT_DIR$/src/ocugine.min.js" />
+        <option value="$PROJECT_DIR$/src/ocugine.min.css" />
+        <option value="$PROJECT_DIR$/demo/app.js" />
+        <option value="$PROJECT_DIR$/demo/index.html" />
+        <option value="$PROJECT_DIR$/README.md" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-4" />
+    <option name="y" value="-4" />
+    <option name="width" value="1928" />
+    <option name="height" value="1088" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="JavaScript-SDK" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="JavaScript-SDK" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="HbShouldOpenHtmlAsHb" value="" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
+      <method />
+    </configuration>
+    <configuration default="true" type="DartTestRunConfigurationType" factoryName="Dart Test">
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerJest" factoryName="Jest">
+      <node-interpreter value="project" />
+      <working-dir value="" />
+      <envs />
+      <scope-kind value="ALL" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma">
+      <config-file value="" />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerProtractor" factoryName="Protractor">
+      <config-file value="" />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" working-dir="">
+      <method />
+    </configuration>
+    <configuration default="true" type="cucumber.js" factoryName="Cucumber.js">
+      <option name="cucumberJsArguments" value="" />
+      <option name="executablePath" />
+      <option name="filePath" />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.npm" factoryName="npm">
+      <command value="run" />
+      <scripts />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="mocha-javascript-test-runner" factoryName="Mocha">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <working-directory />
+      <pass-parent-env>true</pass-parent-env>
+      <envs />
+      <ui />
+      <extra-mocha-options />
+      <test-kind>DIRECTORY</test-kind>
+      <test-directory />
+      <recursive>false</recursive>
+      <method />
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="83fec024-44d1-4cf1-92c4-9d75e1c8bcef" name="Default" comment="" />
+      <created>1570903788071</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1570903788071</updated>
+      <workItem from="1570903789452" duration="9712000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="9712000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-4" y="-4" width="1928" height="1088" extended-state="7" />
+    <layout>
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="processedProjectFiles" value="true" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="8" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/ocugine.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="923">
+          <caret line="3044" column="0" lean-forward="true" selection-start-line="3044" selection-start-column="0" selection-end-line="3044" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#call#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#module#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_serializeData#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_getAPIUrl#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_getServerUrl#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isString#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isNumber#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isArray#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isFunction#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isBoolean#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isRegex#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isError#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isDate#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isSymbol#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isObject#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isEmpty#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#Ocugine_Auth#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Auth#0" expanded="false" />
+            <element signature="n#!!block;n#getLink#0;n#Ocugine_Auth#0" expanded="false" />
+            <element signature="n#!!block;n#getToken#0;n#Ocugine_Auth#0" expanded="false" />
+            <element signature="n#!!block;n#getGrants#0;n#Ocugine_Auth#0" expanded="false" />
+            <element signature="n#!!block;n#logout#0;n#Ocugine_Auth#0" expanded="false" />
+            <element signature="n#Ocugine_Analytics#0" expanded="false" />
+            <element signature="n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getLeaderboards#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getLeaderboardData#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getPlayersTop#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getBoardScores#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_setBoardScores#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getAchievements#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getAchievementData#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getPlayerAchievements#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_unlockPlayerAchievement#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getMissions#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getMissionData#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getPlayerMissionsList#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_addMissionToPlayerList#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_removeMissionFromPlayerList#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_setMissionsScores#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#Ocugine_Monetization#0" expanded="false" />
+            <element signature="n#Ocugine_Notifications#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Notifications#0" expanded="false" />
+            <element signature="n#!!block;n#getList#0;n#Ocugine_Notifications#0" expanded="false" />
+            <element signature="n#!!block;n#getData#0;n#Ocugine_Notifications#0" expanded="false" />
+            <element signature="n#!!block;n#readNotification#0;n#Ocugine_Notifications#0" expanded="false" />
+            <element signature="n#Ocugine_Marketing#0" expanded="false" />
+            <element signature="n#Ocugine_Ads#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Ads#0" expanded="false" />
+            <element signature="e#46566#46627#0" expanded="false" />
+            <element signature="e#46693#46748#0" expanded="false" />
+            <element signature="e#46837#46883#0" expanded="false" />
+            <element signature="e#46943#46990#0" expanded="false" />
+            <element signature="e#47065#47109#0" expanded="false" />
+            <element signature="e#47163#47212#0" expanded="false" />
+            <element signature="e#47266#47320#0" expanded="false" />
+            <element signature="e#47379#47434#0" expanded="false" />
+            <element signature="e#47487#47539#0" expanded="false" />
+            <element signature="n#!!block;n#_getContentList#0;n#Ocugine_Backend#0" expanded="false" />
+            <element signature="n#!!block;n#_getContent#0;n#Ocugine_Backend#0" expanded="false" />
+            <element signature="n#!!block;n#_getAllConfigs#0;n#Ocugine_Backend#0" expanded="false" />
+            <element signature="n#!!block;n#_getConfig#0;n#Ocugine_Backend#0" expanded="false" />
+            <element signature="n#!!block;n#_getAllSaves#0;n#Ocugine_Backend#0" expanded="false" />
+            <element signature="n#!!block;n#_getSaveData#0;n#Ocugine_Backend#0" expanded="false" />
+            <element signature="n#!!block;n#_setSaveData#0;n#Ocugine_Backend#0" expanded="false" />
+            <element signature="n#!!block;n#_removeSaveData#0;n#Ocugine_Backend#0" expanded="false" />
+            <element signature="n#Ocugine_Reports#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Reports#0" expanded="false" />
+            <element signature="n#!!block;n#_sendErrorReport#0;n#Ocugine_Reports#0" expanded="false" />
+            <element signature="n#!!block;n#_getErrorReport#0;n#Ocugine_Reports#0" expanded="false" />
+            <element signature="n#!!block;n#_sendPerformanceReport#0;n#Ocugine_Reports#0" expanded="false" />
+            <element signature="n#!!block;n#_getPerformanceReport#0;n#Ocugine_Reports#0" expanded="false" />
+            <element signature="n#Ocugine_Localization#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Localization#0" expanded="false" />
+            <element signature="n#!!block;n#_getLanguagesList#0;n#Ocugine_Localization#0" expanded="false" />
+            <element signature="n#!!block;n#_getLocalesList#0;n#Ocugine_Localization#0" expanded="false" />
+            <element signature="n#!!block;n#_getLanguage#0;n#Ocugine_Localization#0" expanded="false" />
+            <element signature="n#!!block;n#_getLocale#0;n#Ocugine_Localization#0" expanded="false" />
+            <element signature="n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getPolicyList#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getPolicyInfo#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getBanState#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getCurrentUser#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getUserByUID#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getUsersList#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_findUser#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getGroupsList#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getGroupByUID#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_setGroup#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getCustomFields#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_setCustomField#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getCategories#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getTopics#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getSupportMessages#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_createTopic#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_updateTopic#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_closeTopic#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_sendSupportMessage#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getRooms#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getChatMessages#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_sendChatMessage#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getReviews#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_sendReview#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#showOAuth#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openProfile#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openProfileUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openSupportUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openChatsUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openReviewsUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openAchievementsUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openMissionsUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openLeaderboardsUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openNotificationsUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#showError#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="e#104232#104309#0" expanded="false" />
+            <element signature="n#!!block;n#showAchievement#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#showNewMission#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="e#108523#108602#0" expanded="false" />
+            <element signature="n#Ocugine_Utils#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Utils#0" expanded="false" />
+            <element signature="n#!!block;n#getAPIState#0;n#Ocugine_Utils#0" expanded="false" />
+            <element signature="n#!!block;n#getAPIInfo#0;n#Ocugine_Utils#0" expanded="false" />
+            <element signature="n#!!block;n#testAPPConnection#0;n#Ocugine_Utils#0" expanded="false" />
+            <element signature="n#!!block;n#get_settings#0;n#Ocugine_Utils#0" expanded="false" />
+            <marker date="1570918910626" expanded="true" signature="106677:106722" ph="..." />
+            <marker date="1570918910626" expanded="true" signature="108911:108956" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ocugine.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="34" lean-forward="false" selection-start-line="0" selection-start-column="34" selection-end-line="0" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ocugine.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="34" lean-forward="false" selection-start-line="0" selection-start-column="34" selection-end-line="0" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ocugine.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="986">
+          <caret line="101" column="1" lean-forward="true" selection-start-line="101" selection-start-column="1" selection-end-line="101" selection-end-column="1" />
+          <folding>
+            <element signature="e#1854#2074#0" expanded="false" />
+            <element signature="e#2124#2223#0" expanded="false" />
+            <element signature="e#2251#2351#0" expanded="false" />
+            <element signature="e#2376#2473#0" expanded="false" />
+            <element signature="e#2497#2593#0" expanded="false" />
+            <element signature="e#2644#2736#0" expanded="false" />
+            <element signature="e#2791#3000#0" expanded="false" />
+            <element signature="e#3034#3066#0" expanded="false" />
+            <element signature="e#3101#3233#0" expanded="false" />
+            <element signature="e#3265#3302#0" expanded="false" />
+            <element signature="e#3351#3444#0" expanded="false" />
+            <element signature="e#3490#3540#0" expanded="false" />
+            <element signature="e#3582#3646#0" expanded="false" />
+            <element signature="e#3688#3768#0" expanded="false" />
+            <element signature="e#3793#4008#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo/ocugine.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="2581" column="60" lean-forward="true" selection-start-line="2581" selection-start-column="60" selection-end-line="2581" selection-end-column="60" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#call#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#module#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_serializeData#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_getAPIUrl#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_getServerUrl#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isString#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isNumber#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isArray#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isFunction#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isBoolean#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isRegex#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isError#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isDate#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isSymbol#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isObject#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#!!block;n#_isEmpty#0;n#OcugineSDK#0" expanded="false" />
+            <element signature="n#Ocugine_Auth#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Auth#0" expanded="false" />
+            <element signature="n#!!block;n#getLink#0;n#Ocugine_Auth#0" expanded="false" />
+            <element signature="n#!!block;n#getToken#0;n#Ocugine_Auth#0" expanded="false" />
+            <element signature="n#!!block;n#getGrants#0;n#Ocugine_Auth#0" expanded="false" />
+            <element signature="n#!!block;n#logout#0;n#Ocugine_Auth#0" expanded="false" />
+            <element signature="n#Ocugine_Analytics#0" expanded="false" />
+            <element signature="n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getLeaderboards#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getLeaderboardData#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getPlayersTop#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getBoardScores#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_setBoardScores#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getAchievements#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getAchievementData#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getPlayerAchievements#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_unlockPlayerAchievement#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getMissions#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getMissionData#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_getPlayerMissionsList#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_addMissionToPlayerList#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_removeMissionFromPlayerList#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#!!block;n#_setMissionsScores#0;n#Ocugine_Gaming#0" expanded="false" />
+            <element signature="n#Ocugine_Monetization#0" expanded="false" />
+            <element signature="n#Ocugine_Notifications#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Notifications#0" expanded="false" />
+            <element signature="n#!!block;n#getList#0;n#Ocugine_Notifications#0" expanded="false" />
+            <element signature="n#!!block;n#getData#0;n#Ocugine_Notifications#0" expanded="false" />
+            <element signature="n#!!block;n#readNotification#0;n#Ocugine_Notifications#0" expanded="false" />
+            <element signature="n#Ocugine_Marketing#0" expanded="false" />
+            <element signature="n#Ocugine_Ads#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Ads#0" expanded="false" />
+            <element signature="e#46568#46629#0" expanded="false" />
+            <element signature="e#46695#46750#0" expanded="false" />
+            <element signature="e#46839#46885#0" expanded="false" />
+            <element signature="e#46945#46992#0" expanded="false" />
+            <element signature="e#47067#47111#0" expanded="false" />
+            <element signature="e#47165#47214#0" expanded="false" />
+            <element signature="e#47268#47322#0" expanded="false" />
+            <element signature="e#47381#47436#0" expanded="false" />
+            <element signature="e#47489#47541#0" expanded="false" />
+            <element signature="n#!!block;n#_getContentList#0;n#Ocugine_Backend#0" expanded="false" />
+            <element signature="n#!!block;n#_getContent#0;n#Ocugine_Backend#0" expanded="false" />
+            <element signature="n#!!block;n#_getAllConfigs#0;n#Ocugine_Backend#0" expanded="false" />
+            <element signature="n#!!block;n#_getConfig#0;n#Ocugine_Backend#0" expanded="false" />
+            <element signature="n#!!block;n#_getAllSaves#0;n#Ocugine_Backend#0" expanded="false" />
+            <element signature="n#!!block;n#_setSaveData#0;n#Ocugine_Backend#0" expanded="false" />
+            <element signature="n#!!block;n#_removeSaveData#0;n#Ocugine_Backend#0" expanded="false" />
+            <element signature="n#Ocugine_Reports#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Reports#0" expanded="false" />
+            <element signature="n#!!block;n#_sendErrorReport#0;n#Ocugine_Reports#0" expanded="false" />
+            <element signature="n#!!block;n#_getErrorReport#0;n#Ocugine_Reports#0" expanded="false" />
+            <element signature="n#!!block;n#_sendPerformanceReport#0;n#Ocugine_Reports#0" expanded="false" />
+            <element signature="n#!!block;n#_getPerformanceReport#0;n#Ocugine_Reports#0" expanded="false" />
+            <element signature="n#Ocugine_Localization#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Localization#0" expanded="false" />
+            <element signature="n#!!block;n#_getLanguagesList#0;n#Ocugine_Localization#0" expanded="false" />
+            <element signature="n#!!block;n#_getLocalesList#0;n#Ocugine_Localization#0" expanded="false" />
+            <element signature="n#!!block;n#_getLanguage#0;n#Ocugine_Localization#0" expanded="false" />
+            <element signature="n#!!block;n#_getLocale#0;n#Ocugine_Localization#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getPolicyList#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getPolicyInfo#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getBanState#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getCurrentUser#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getUserByUID#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getUsersList#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_findUser#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getGroupsList#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getGroupByUID#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_setGroup#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getCustomFields#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_setCustomField#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getCategories#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getTopics#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getSupportMessages#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_createTopic#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_updateTopic#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_closeTopic#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_sendSupportMessage#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getRooms#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getChatMessages#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_sendChatMessage#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_getReviews#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#_sendReview#0;n#Ocugine_Users#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#showOAuth#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openProfile#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openProfileUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openSupportUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openChatsUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openReviewsUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openAchievementsUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openMissionsUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openLeaderboardsUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#openNotificationsUI#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#showError#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="e#104234#104311#0" expanded="false" />
+            <element signature="n#!!block;n#showAchievement#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="n#!!block;n#showNewMission#0;n#Ocugine_UI#0" expanded="false" />
+            <element signature="e#108525#108604#0" expanded="false" />
+            <element signature="n#Ocugine_Utils#0" expanded="false" />
+            <element signature="n#!!block;n#constructor#0;n#Ocugine_Utils#0" expanded="false" />
+            <element signature="n#!!block;n#getAPIState#0;n#Ocugine_Utils#0" expanded="false" />
+            <element signature="n#!!block;n#getAPIInfo#0;n#Ocugine_Utils#0" expanded="false" />
+            <element signature="n#!!block;n#testAPPConnection#0;n#Ocugine_Utils#0" expanded="false" />
+            <element signature="n#!!block;n#get_settings#0;n#Ocugine_Utils#0" expanded="false" />
+            <marker date="1570918875938" expanded="false" signature="52545:53333" ph="{...}" />
+            <marker date="1570918875938" expanded="false" signature="66380:95070" ph="{...}" />
+            <marker date="1570918875938" expanded="true" signature="106679:106724" ph="..." />
+            <marker date="1570918875938" expanded="true" signature="108913:108958" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo/ocugine.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="26" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="170" selection-end-column="1" />
+          <folding>
+            <element signature="e#1854#2074#0" expanded="false" />
+            <element signature="e#2124#2223#0" expanded="false" />
+            <element signature="e#2251#2351#0" expanded="false" />
+            <element signature="e#2376#2473#0" expanded="false" />
+            <element signature="e#2497#2593#0" expanded="false" />
+            <element signature="e#2644#2736#0" expanded="false" />
+            <element signature="e#2791#3000#0" expanded="false" />
+            <element signature="e#3034#3066#0" expanded="false" />
+            <element signature="e#3101#3233#0" expanded="false" />
+            <element signature="e#3265#3302#0" expanded="false" />
+            <element signature="e#3351#3444#0" expanded="false" />
+            <element signature="e#3490#3540#0" expanded="false" />
+            <element signature="e#3582#3646#0" expanded="false" />
+            <element signature="e#3688#3768#0" expanded="false" />
+            <element signature="e#3793#4008#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="688">
+          <caret line="141" column="37" lean-forward="false" selection-start-line="141" selection-start-column="26" selection-end-line="141" selection-end-column="37" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#7111#8362#0" expanded="false" />
+            <element signature="e#7475#8132#0" expanded="false" />
+            <element signature="n#!!block;n#initializeApp#0" expanded="false" />
+            <element signature="n#!!block;n#initializeAchivs#0" expanded="false" />
+            <marker date="1570919043972" expanded="true" signature="9665:9702" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1564">
+          <caret line="92" column="76" lean-forward="false" selection-start-line="92" selection-start-column="76" selection-end-line="92" selection-end-column="76" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1326">
+          <caret line="108" column="26" lean-forward="true" selection-start-line="108" selection-start-column="26" selection-end-line="108" selection-end-column="26" />
+          <folding>
+            <element signature="n#div#1;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#2;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="e#8669#8673#0" expanded="true" />
+            <element signature="e#8785#8789#0" expanded="true" />
+            <element signature="e#8789#8793#0" expanded="true" />
+            <element signature="e#8800#8804#0" expanded="true" />
+            <element signature="e#8990#8996#0" expanded="true" />
+            <element signature="e#8996#9002#0" expanded="true" />
+            <element signature="e#9002#9008#0" expanded="true" />
+            <element signature="e#9008#9014#0" expanded="true" />
+            <element signature="e#9069#9075#0" expanded="true" />
+            <element signature="e#9075#9081#0" expanded="true" />
+            <element signature="e#9081#9087#0" expanded="true" />
+            <element signature="e#9087#9093#0" expanded="true" />
+            <element signature="e#9709#9715#0" expanded="true" />
+            <element signature="e#9715#9721#0" expanded="true" />
+            <element signature="e#9721#9727#0" expanded="true" />
+            <element signature="e#9727#9733#0" expanded="true" />
+            <element signature="e#9801#9807#0" expanded="true" />
+            <element signature="e#9807#9813#0" expanded="true" />
+            <element signature="e#9813#9819#0" expanded="true" />
+            <element signature="e#9819#9825#0" expanded="true" />
+            <element signature="e#9877#9883#0" expanded="true" />
+            <element signature="e#9883#9889#0" expanded="true" />
+            <element signature="e#9889#9895#0" expanded="true" />
+            <element signature="e#9895#9901#0" expanded="true" />
+            <element signature="e#9978#9984#0" expanded="true" />
+            <element signature="e#9984#9990#0" expanded="true" />
+            <element signature="e#9990#9996#0" expanded="true" />
+            <element signature="e#9996#10002#0" expanded="true" />
+            <element signature="e#10056#10062#0" expanded="true" />
+            <element signature="e#10062#10068#0" expanded="true" />
+            <element signature="e#10068#10074#0" expanded="true" />
+            <element signature="e#10074#10080#0" expanded="true" />
+            <element signature="e#10932#10938#0" expanded="true" />
+            <element signature="e#10938#10944#0" expanded="true" />
+            <element signature="e#11029#11035#0" expanded="true" />
+            <element signature="e#11035#11041#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

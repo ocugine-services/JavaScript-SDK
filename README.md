@@ -13,24 +13,19 @@ To get started, checkout examples and documentation at https://ocugine.net/. You
 ## Installation
 Connect our SDK library for your project:
 ```html
-<script type="text/javascript" src="https://cp.ocugine.net/cdn/js-sdk-040-a/ocugine.js" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cp.ocugine.net/cdn/js-sdk-041/ocugine.js" crossorigin="anonymous"></script>
 ```
 
 Or use minified version:
 ```html
-<script type="text/javascript" src="https://cp.ocugine.net/cdn/js-sdk-040-a/ocugine.min.js" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cp.ocugine.net/cdn/js-sdk-041/ocugine.min.js" crossorigin="anonymous"></script>
 ```
 
 ---
 
 **If you want to use our UI Module from JS SDK you need to connect CSS:**
 ```html
-<link rel="stylesheet" href="https://cp.ocugine.net/cdn/js-sdk-040-a/ocugine.css" crossorigin="anonymous">
-```
-
-**And jQuery**
-```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cp.ocugine.net/cdn/js-sdk-041/ocugine.css" crossorigin="anonymous">
 ```
 
 ## Setup SDK
@@ -75,6 +70,7 @@ The list of available object:
 * **Ocugine_Ads** - Advertising Class;
 * **Ocugine_Backend** - Cloud Management Class;
   * **storage** - Storage Object;
+  * **saves** - Cloud-Saves Object;
   * **database** - Database Object;
   * **multiplayer** - Multiplayer Object;
   * **liveconfs** - Live Configs Object;

@@ -5,8 +5,8 @@
 //
 //	@name           Ocugine SDK
 //  @developer      CodeBits Interactive
-//  @version        0.4.0a
-//  @build          401
+//  @version        0.4.1
+//  @build          412
 //  @url            https://ocugine.pro/
 //  @docs           https://docs.ocugine.pro/
 //  @license        MIT
@@ -43,9 +43,9 @@ return NProgress;});
 $(document).ready(function(){
 	// AJAX Preloader
 	$.ajaxSetup({
-    beforeSend: function(){ NProgress.start(); },
-    complete: function(){ NProgress.done(); }
-  });
+		beforeSend: function(){ NProgress.start(); },
+		complete: function(){ NProgress.done(); }
+	});
 
 	// Initialize Application
 	let OSDK = null;
@@ -69,7 +69,7 @@ $(document).ready(function(){
 			auto_analytics: true, // Auto Analytics for Application
 			platform: "web", // Game Platform
 			auto_reports: true // Auto Reporting (Errors) - Error's Logging
-		}, true);
+		}, false);
 
 		// Show Next Page
 		$('#app_setup').hide();
@@ -104,11 +104,10 @@ function initializeApp(OSDK){
 		}
 		$('#advanced_fields').empty().append(_cont);
 		initializeAchivs(OSDK);
+		initializeHandlers(OSDK);
 	}, function(error){
 		$('#profile_error').empty().append(error).show();
 	});
-
-
 }
 
 // Initialize Achievements
@@ -125,5 +124,28 @@ function initializeAchivs(OSDK){
 		$('#achivs').empty().append(_cont);
 	}, function(error){
 		$('#achivs_error').empty().append(error).show();
+	});
+}
+
+// Initialize Handlers
+function initializeHandlers(OSDK){
+	// Logout
+	$('a[data-action="logout"]').off('click').on('click', function(){
+		OSDK.module("Auth").logout(function(){
+			$('#auth').show();
+			$('#app').hide();
+		}); // Logout
+	});
+
+	// Show Profile
+	$('a[data-action="show_profile"]').off('click').on('click', function(){
+		OSDK.module("UI").openProfile(function(){
+			initializeApp(OSDK);
+		}); // Open Profile UI
+	});
+
+	// Show Test Error
+	$('a[data-action="show_error"]').off("click").on("click", function(){
+		OSDK.module("UI").showError("Test Error", "This is a test errror.");
 	});
 }
